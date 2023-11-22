@@ -1,0 +1,16 @@
+.DS_Store
+/.build
+build/
+/Packages
+TCASendBug.xcodeproj/xcuserdata
+TCASendBug.xcodeproj/project.xcworkspace/xcuserdata
+/Package.resolved
+xcuserdata/
+*.xcuserstate
+DerivedData/
+.swiftpm/config/registries.json
+.swiftpm/xcode/package.xcworkspace/contents.xcworkspacedata
+.netrc
+.bundle
+vendor
+.design
