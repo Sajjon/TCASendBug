@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4807CB672B0E73A400FDDD76 /* AppFeature.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4807CB662B0E73A400FDDD76 /* AppFeature.swift */; };
+		4807CB692B0E73C800FDDD76 /* FeatureReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4807CB682B0E73C800FDDD76 /* FeatureReducer.swift */; };
+		4807CB6F2B0E749D00FDDD76 /* ComposableArchitecture in Frameworks */ = {isa = PBXBuildFile; productRef = 4807CB6E2B0E749D00FDDD76 /* ComposableArchitecture */; };
 		480A12432B0E7265009FA3C6 /* TCASendBugApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 480A12422B0E7265009FA3C6 /* TCASendBugApp.swift */; };
 		480A12452B0E7265009FA3C6 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 480A12442B0E7265009FA3C6 /* ContentView.swift */; };
 		480A12472B0E7266009FA3C6 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 480A12462B0E7266009FA3C6 /* Assets.xcassets */; };
@@ -14,6 +17,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		4807CB662B0E73A400FDDD76 /* AppFeature.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppFeature.swift; sourceTree = "<group>"; };
+		4807CB682B0E73C800FDDD76 /* FeatureReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeatureReducer.swift; sourceTree = "<group>"; };
 		480A123F2B0E7265009FA3C6 /* TCASendBug.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TCASendBug.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		480A12422B0E7265009FA3C6 /* TCASendBugApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TCASendBugApp.swift; sourceTree = "<group>"; };
 		480A12442B0E7265009FA3C6 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -26,12 +31,29 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4807CB6F2B0E749D00FDDD76 /* ComposableArchitecture in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		4807CB642B0E739600FDDD76 /* Features */ = {
+			isa = PBXGroup;
+			children = (
+				4807CB652B0E739900FDDD76 /* 0_App */,
+				4807CB682B0E73C800FDDD76 /* FeatureReducer.swift */,
+			);
+			path = Features;
+			sourceTree = "<group>";
+		};
+		4807CB652B0E739900FDDD76 /* 0_App */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = 0_App;
+			sourceTree = "<group>";
+		};
 		480A12362B0E7265009FA3C6 = {
 			isa = PBXGroup;
 			children = (
@@ -51,7 +73,9 @@
 		480A12412B0E7265009FA3C6 /* TCASendBug */ = {
 			isa = PBXGroup;
 			children = (
+				4807CB642B0E739600FDDD76 /* Features */,
 				480A12422B0E7265009FA3C6 /* TCASendBugApp.swift */,
+				4807CB662B0E73A400FDDD76 /* AppFeature.swift */,
 				480A12442B0E7265009FA3C6 /* ContentView.swift */,
 				480A12462B0E7266009FA3C6 /* Assets.xcassets */,
 				480A12482B0E7266009FA3C6 /* Preview Content */,
@@ -83,6 +107,9 @@
 			dependencies = (
 			);
 			name = TCASendBug;
+			packageProductDependencies = (
+				4807CB6E2B0E749D00FDDD76 /* ComposableArchitecture */,
+			);
 			productName = TCASendBug;
 			productReference = 480A123F2B0E7265009FA3C6 /* TCASendBug.app */;
 			productType = "com.apple.product-type.application";
@@ -111,6 +138,9 @@
 				Base,
 			);
 			mainGroup = 480A12362B0E7265009FA3C6;
+			packageReferences = (
+				4807CB6D2B0E749D00FDDD76 /* XCRemoteSwiftPackageReference "swift-composable-architecture" */,
+			);
 			productRefGroup = 480A12402B0E7265009FA3C6 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -137,6 +167,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4807CB672B0E73A400FDDD76 /* AppFeature.swift in Sources */,
+				4807CB692B0E73C800FDDD76 /* FeatureReducer.swift in Sources */,
 				480A12452B0E7265009FA3C6 /* ContentView.swift in Sources */,
 				480A12432B0E7265009FA3C6 /* TCASendBugApp.swift in Sources */,
 			);
@@ -344,6 +376,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		4807CB6D2B0E749D00FDDD76 /* XCRemoteSwiftPackageReference "swift-composable-architecture" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/pointfreeco/swift-composable-architecture.git";
+			requirement = {
+				kind = exactVersion;
+				version = 1.3.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		4807CB6E2B0E749D00FDDD76 /* ComposableArchitecture */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 4807CB6D2B0E749D00FDDD76 /* XCRemoteSwiftPackageReference "swift-composable-architecture" */;
+			productName = ComposableArchitecture;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 480A12372B0E7265009FA3C6 /* Project object */;
 }
