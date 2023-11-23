@@ -14,6 +14,29 @@ import ComposableArchitecture
 // https://github.com/radixdlt/babylon-wallet-ios/blob/ABW-2412_restore_wallet_from_mnemonic_only/RadixWallet/Features/AccountRecoveryScan/Children/AccountRecoveryScanInProgress/AccountRecoveryScanInProgress.swift
 struct Onboarding: Sendable, Reducer {
 	
+	// ‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️
+	//
+	// Behaviour:
+	// * A: set `state.destination = nil`
+	// * B: sleep inside `.run` for more than 600ms
+	//
+	// If an A) AND B) is true, we never receive `.internal(.extremelyImportantInternalActionChangingState)`
+	//
+	// ‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️
+	private func scanOnLedger(state: inout State) -> Effect<Action> {
+		guard let sleepDurationInMS = state.sleepDuration else {
+			fatalError("Expected valid duration")
+		}
+		if state.shouldNilDestinationBeforeScanning {
+			state.destination = nil
+		}
+		state.status = .scanningNetworkForActiveAccounts
+		return .run { send in
+			try? await Task.sleep(for: sleepDurationInMS)
+			await send(.internal(.extremelyImportantInternalActionChangingState))
+		}
+	}
+	
 	struct View: SwiftUI.View {
 		let store: StoreOf<Onboarding>
 		var body: some SwiftUI.View {
@@ -203,28 +226,6 @@ struct Onboarding: Sendable, Reducer {
 		}
 	}
 
-	// ‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️
-	//
-	// Behaviour:
-	// * A: set `state.destination = nil`
-	// * B: sleep inside `.run` for more than 500ms
-	//
-	// If an A) AND B) is true, we get a crash.
-	//
-	// ‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️
-	private func scanOnLedger(state: inout State) -> Effect<Action> {
-		guard let sleepDurationInMS = state.sleepDuration else {
-			fatalError("Expected valid duration")
-		}
-		if state.shouldNilDestinationBeforeScanning {
-			state.destination = nil
-		}
-		state.status = .scanningNetworkForActiveAccounts
-		return .run { send in
-			try? await Task.sleep(for: sleepDurationInMS)
-			await send(.internal(.extremelyImportantInternalActionChangingState))
-		}
-	}
 
 }
 
