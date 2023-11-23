@@ -110,7 +110,7 @@ struct App {
 func slowTask(name: String) async {
 	log.info("Slow task - '\(name)' START")
 	await Task {
-		_ = (0...10000).map { _ in
+		_ = (0...20000).map { _ in
 			Curve25519.Signing.PrivateKey().publicKey
 		}
 	}.value
