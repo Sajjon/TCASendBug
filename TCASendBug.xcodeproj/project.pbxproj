@@ -18,6 +18,7 @@
 		4807CB832B0E76F700FDDD76 /* RecoverWalletWithoutProfileStartFeature.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4807CB822B0E76F700FDDD76 /* RecoverWalletWithoutProfileStartFeature.swift */; };
 		4807CB872B0F2D9600FDDD76 /* AccountRecoveryScanCoordinatorFeature.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4807CB862B0F2D9600FDDD76 /* AccountRecoveryScanCoordinatorFeature.swift */; };
 		4807CB8A2B0F2E1B00FDDD76 /* AccountRecoveryScanInProgressFeature.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4807CB892B0F2E1B00FDDD76 /* AccountRecoveryScanInProgressFeature.swift */; };
+		4807CB8C2B0F316700FDDD76 /* Footer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4807CB8B2B0F316700FDDD76 /* Footer.swift */; };
 		480A12432B0E7265009FA3C6 /* TCASendBugApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 480A12422B0E7265009FA3C6 /* TCASendBugApp.swift */; };
 		480A12452B0E7265009FA3C6 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 480A12442B0E7265009FA3C6 /* ContentView.swift */; };
 		480A12472B0E7266009FA3C6 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 480A12462B0E7266009FA3C6 /* Assets.xcassets */; };
@@ -35,6 +36,7 @@
 		4807CB822B0E76F700FDDD76 /* RecoverWalletWithoutProfileStartFeature.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecoverWalletWithoutProfileStartFeature.swift; sourceTree = "<group>"; };
 		4807CB862B0F2D9600FDDD76 /* AccountRecoveryScanCoordinatorFeature.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountRecoveryScanCoordinatorFeature.swift; sourceTree = "<group>"; };
 		4807CB892B0F2E1B00FDDD76 /* AccountRecoveryScanInProgressFeature.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountRecoveryScanInProgressFeature.swift; sourceTree = "<group>"; };
+		4807CB8B2B0F316700FDDD76 /* Footer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Footer.swift; sourceTree = "<group>"; };
 		480A123F2B0E7265009FA3C6 /* TCASendBug.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TCASendBug.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		480A12422B0E7265009FA3C6 /* TCASendBugApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TCASendBugApp.swift; sourceTree = "<group>"; };
 		480A12442B0E7265009FA3C6 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -57,13 +59,13 @@
 		4807CB642B0E739600FDDD76 /* Features */ = {
 			isa = PBXGroup;
 			children = (
-				4807CB842B0F2D7300FDDD76 /* 6_AccountRecoveryScan */,
-				4807CB7C2B0E764F00FDDD76 /* 5_RecoverWalletWithoutProfileCoordinator */,
-				4807CB792B0E760600FDDD76 /* 4_SelectBackup */,
-				4807CB762B0E75BB00FDDD76 /* 3_RestoreProfileFromBackupCoordinator */,
-				4807CB732B0E757400FDDD76 /* 2_OnboardingStartup */,
 				4807CB652B0E739900FDDD76 /* 0_App */,
 				4807CB702B0E74F800FDDD76 /* 1_Onboarding */,
+				4807CB732B0E757400FDDD76 /* 2_OnboardingStartup */,
+				4807CB762B0E75BB00FDDD76 /* 3_RestoreProfileFromBackupCoordinator */,
+				4807CB792B0E760600FDDD76 /* 4_SelectBackup */,
+				4807CB7C2B0E764F00FDDD76 /* 5_RecoverWalletWithoutProfileCoordinator */,
+				4807CB842B0F2D7300FDDD76 /* 6_AccountRecoveryScan */,
 				4807CB682B0E73C800FDDD76 /* FeatureReducer.swift */,
 			);
 			path = Features;
@@ -183,6 +185,7 @@
 				480A12442B0E7265009FA3C6 /* ContentView.swift */,
 				480A12462B0E7266009FA3C6 /* Assets.xcassets */,
 				480A12482B0E7266009FA3C6 /* Preview Content */,
+				4807CB8B2B0F316700FDDD76 /* Footer.swift */,
 			);
 			path = TCASendBug;
 			sourceTree = "<group>";
@@ -274,6 +277,7 @@
 				4807CB832B0E76F700FDDD76 /* RecoverWalletWithoutProfileStartFeature.swift in Sources */,
 				4807CB722B0E753300FDDD76 /* OnboardingFeature.swift in Sources */,
 				4807CB672B0E73A400FDDD76 /* AppFeature.swift in Sources */,
+				4807CB8C2B0F316700FDDD76 /* Footer.swift in Sources */,
 				4807CB872B0F2D9600FDDD76 /* AccountRecoveryScanCoordinatorFeature.swift in Sources */,
 				4807CB692B0E73C800FDDD76 /* FeatureReducer.swift in Sources */,
 				480A12452B0E7265009FA3C6 /* ContentView.swift in Sources */,

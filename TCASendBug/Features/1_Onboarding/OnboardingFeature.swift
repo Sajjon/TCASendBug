@@ -9,11 +9,15 @@ public struct OnboardingCoordinator: Sendable, FeatureReducer {
 	public struct View: SwiftUI.View {
 		public let store: StoreOf<OnboardingCoordinator>
 		public var body: some SwiftUI.View {
-			VStack {
-				Text("OnboardingCoordinator")
-//				Button("Next") {
-//					store.send(.view(.selectedRestoreFromBackup))
-//				}
+			SwitchStore(store.scope(state: \.root, action: Action.child)) { state in
+				switch state {
+				case .startup:
+					CaseLet(
+						/OnboardingCoordinator.State.Root.startup,
+						action: OnboardingCoordinator.ChildAction.startup,
+						then: { OnboardingStartup.View(store: $0) }
+					)
+				}
 			}
 		}
 	}
@@ -47,48 +51,21 @@ public struct OnboardingCoordinator: Sendable, FeatureReducer {
 	public init() {}
 
 	public var body: some ReducerOf<Self> {
-//		Scope(state: \.root, action: /Action.child) {
-//			EmptyReducer()
-//				.ifCaseLet(/State.Root.startup, action: /ChildAction.startup) {
-//					OnboardingStartup()
-//				}
-//				.ifCaseLet(/State.Root.createAccountCoordinator, action: /ChildAction.createAccountCoordinator) {
-//					CreateAccountCoordinator()
-//				}
-//		}
-//
-//		Reduce(core)
-		EmptyReducer()
-	}
-/*
-	public func reduce(into state: inout State, internalAction: InternalAction) -> Effect<Action> {
-		switch internalAction {
-		case .finishedOnboarding:
-			sendDelegateCompleted(state: state)
+		Scope(state: \.root, action: /Action.child) {
+			EmptyReducer()
+				.ifCaseLet(/State.Root.startup, action: /ChildAction.startup) {
+					OnboardingStartup()
+				}
 		}
+
+		Reduce(core)
 	}
 
 	public func reduce(into state: inout State, childAction: ChildAction) -> Effect<Action> {
 		switch childAction {
-		case .startup(.delegate(.setupNewUser)):
-			state.root = .createAccountCoordinator(
-				.init(
-					config: .init(purpose: .firstAccountForNewProfile)
-				)
-			)
-			return .none
-
+			
 		case .startup(.delegate(.profileCreatedFromImportedBDFS)):
 			return sendDelegateCompleted(state: state)
-
-		case .startup(.delegate(.completed)):
-			return sendDelegateCompleted(state: state)
-
-		case .createAccountCoordinator(.delegate(.completed)):
-			return .run { send in
-				let _ = await onboardingClient.finishOnboarding()
-				await send(.internal(.finishedOnboarding))
-			}
 
 		default:
 			return .none
@@ -100,5 +77,11 @@ public struct OnboardingCoordinator: Sendable, FeatureReducer {
 	) -> Effect<Action> {
 		.send(.delegate(.completed))
 	}
- */
+ 
+ public func reduce(into state: inout State, internalAction: InternalAction) -> Effect<Action> {
+	 switch internalAction {
+	 case .finishedOnboarding:
+		 sendDelegateCompleted(state: state)
+	 }
+ }
 }

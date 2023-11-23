@@ -14,11 +14,18 @@ public struct OnboardingStartup: Sendable, FeatureReducer {
 	public struct View: SwiftUI.View {
 		public let store: StoreOf<OnboardingStartup>
 		public var body: some SwiftUI.View {
-			VStack {
-				Text("OnboardingStartup")
-				Button("Next") {
-					store.send(.view(.selectedRestoreFromBackup))
+			NavigationStack {
+				WithViewStore(store, observe: { $0 }, send: { .view($0) }) { viewStore in
+					VStack(spacing: 0) {
+						Text("OnboardingStartup")
+					}
+					.footer {
+						Button("Restore from backup") {
+							viewStore.send(.selectedRestoreFromBackup)
+						}
+					}
 				}
+				.destinations(with: store)
 			}
 		}
 	}
@@ -62,26 +69,18 @@ public struct OnboardingStartup: Sendable, FeatureReducer {
 	}
 
 	private let destinationPath: WritableKeyPath<State, PresentationState<Destination.State>> = \.$destination
-/*
+
 	public func reduce(into state: inout State, viewAction: ViewAction) -> Effect<Action> {
 		switch viewAction {
-		case .selectedNewWalletUser:
-			return .send(.delegate(.setupNewUser))
 
 		case .selectedRestoreFromBackup:
 			state.destination = .restoreFromBackup(.init())
 			return .none
 		}
 	}
-
 	public func reduce(into state: inout State, presentedAction: Destination.Action) -> Effect<Action> {
 		switch presentedAction {
-		case .restoreFromBackup(.delegate(.profileImported)):
-			return .send(.delegate(.completed))
-
-		case .restoreFromBackup(.delegate(.failedToImportProfileDueToMnemonics)):
-			return .none
-
+		
 		case .restoreFromBackup(.delegate(.backToStartOfOnboarding)):
 			state.destination = nil
 			return .none
@@ -94,6 +93,27 @@ public struct OnboardingStartup: Sendable, FeatureReducer {
 			return .none
 		}
 	}
- */
 }
 
+
+private extension StoreOf<OnboardingStartup> {
+	var destination: PresentationStoreOf<OnboardingStartup.Destination> {
+		func scopeState(state: State) -> PresentationState<OnboardingStartup.Destination.State> {
+			state.$destination
+		}
+		return scope(state: scopeState, action: Action.destination)
+	}
+}
+
+@MainActor
+private extension View {
+	func destinations(with store: StoreOf<OnboardingStartup>) -> some View {
+		let destinationStore = store.destination
+		return sheet(
+			store: destinationStore,
+			state: /OnboardingStartup.Destination.State.restoreFromBackup,
+			action: OnboardingStartup.Destination.Action.restoreFromBackup,
+			content: { RestoreProfileFromBackupCoordinator.View(store: $0) }
+		)
+	}
+}

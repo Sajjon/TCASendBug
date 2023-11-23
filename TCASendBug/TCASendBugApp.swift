@@ -18,8 +18,10 @@ struct TCASendBugApp: SwiftUI.App {
 						initialState: App.State()
 					) {
 						App()
+							._printChanges()
 					}
 				)
+				.buttonStyle(.borderedProminent)
 			} else {
 				Text("Running tests")
 			}

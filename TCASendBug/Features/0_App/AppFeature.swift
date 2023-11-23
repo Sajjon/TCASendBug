@@ -60,6 +60,20 @@ public struct App: Sendable, FeatureReducer {
 		case main(Main.Action)
 		case onboardingCoordinator(OnboardingCoordinator.Action)
 	}
+	
+	public var body: some ReducerOf<Self> {
+		Scope(state: \.root, action: /Action.child) {
+			EmptyReducer()
+				.ifCaseLet(/State.Root.main, action: /ChildAction.main) {
+					Main()
+				}
+				.ifCaseLet(/State.Root.onboardingCoordinator, action: /ChildAction.onboardingCoordinator) {
+					OnboardingCoordinator()
+				}
+		}
+		Reduce(core)
+	}
+
 }
 
 public struct Main: Sendable, FeatureReducer {
