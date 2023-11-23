@@ -16,7 +16,10 @@ public struct RecoverWalletWithoutProfileStart: Sendable, FeatureReducer {
 		public var body: some SwiftUI.View {
 			VStack {
 				Text("RecoverWalletWithoutProfileStart")
-				Button("Next") {
+				
+				Text("**I have my main “Babylon” 24-word seed phrase.**")
+
+				Button("Recover with Main Seed Phrase") {
 					store.send(.view(.recoverWithBDFSTapped))
 				}
 			}

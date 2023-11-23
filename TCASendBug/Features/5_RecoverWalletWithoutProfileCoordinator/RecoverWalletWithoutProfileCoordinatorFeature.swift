@@ -45,19 +45,26 @@ public struct RecoverWalletWithoutProfileCoordinator: Sendable, FeatureReducer {
 						action: RecoverWalletWithoutProfileCoordinator.Path.Action.start,
 						then: { RecoverWalletWithoutProfileStart.View(store: $0) }
 					)
-//				case .importMnemonic:
-//					CaseLet(
-//						/RecoverWalletWithoutProfileCoordinator.Path.State.importMnemonic,
-//						action: RecoverWalletWithoutProfileCoordinator.Path.Action.importMnemonic,
-//						then: { ImportMnemonic.View(store: $0) }
-//					)
-//
-//				case .recoveryComplete:
-//					CaseLet(
-//						/RecoverWalletWithoutProfileCoordinator.Path.State.recoveryComplete,
-//						action: RecoverWalletWithoutProfileCoordinator.Path.Action.recoveryComplete,
-//						then: { RecoverWalletControlWithBDFSComplete.View(store: $0) }
-//					)
+					
+				case .recoverWalletControlWithBDFSOnly:
+					CaseLet(
+						/RecoverWalletWithoutProfileCoordinator.Path.State.recoverWalletControlWithBDFSOnly,
+						action: RecoverWalletWithoutProfileCoordinator.Path.Action.recoverWalletControlWithBDFSOnly,
+						then: { RecoverWalletControlWithBDFSOnly.View(store: $0) }
+					)
+				case .importMnemonic:
+					CaseLet(
+						/RecoverWalletWithoutProfileCoordinator.Path.State.importMnemonic,
+						action: RecoverWalletWithoutProfileCoordinator.Path.Action.importMnemonic,
+						then: { ImportMnemonic.View(store: $0) }
+					)
+
+				case .recoveryComplete:
+					CaseLet(
+						/RecoverWalletWithoutProfileCoordinator.Path.State.recoveryComplete,
+						action: RecoverWalletWithoutProfileCoordinator.Path.Action.recoveryComplete,
+						then: { RecoverWalletControlWithBDFSComplete.View(store: $0) }
+					)
 				}
 			}
 		}
@@ -79,28 +86,34 @@ public struct RecoverWalletWithoutProfileCoordinator: Sendable, FeatureReducer {
 	public struct Path: Sendable, Hashable, Reducer {
 		public enum State: Sendable, Hashable {
 			case start(RecoverWalletWithoutProfileStart.State)
-//			case importMnemonic(ImportMnemonic.State)
-//			case recoveryComplete(RecoverWalletControlWithBDFSComplete.State)
+			case recoverWalletControlWithBDFSOnly(RecoverWalletControlWithBDFSOnly.State)
+			case importMnemonic(ImportMnemonic.State)
+			case recoveryComplete(RecoverWalletControlWithBDFSComplete.State)
 		}
 
 		public enum Action: Sendable, Equatable {
 			case start(RecoverWalletWithoutProfileStart.Action)
-//			case importMnemonic(ImportMnemonic.Action)
-//			case recoveryComplete(RecoverWalletControlWithBDFSComplete.Action)
+			case recoverWalletControlWithBDFSOnly(RecoverWalletControlWithBDFSOnly.Action)
+			case importMnemonic(ImportMnemonic.Action)
+			case recoveryComplete(RecoverWalletControlWithBDFSComplete.Action)
 		}
 
 		public var body: some ReducerOf<Self> {
 			Scope(state: /State.start, action: /Action.start) {
 				RecoverWalletWithoutProfileStart()
 			}
+			
+			Scope(state: /State.recoverWalletControlWithBDFSOnly, action: /Action.recoverWalletControlWithBDFSOnly) {
+				RecoverWalletControlWithBDFSOnly()
+			}
 
-//			Scope(state: /State.importMnemonic, action: /Action.importMnemonic) {
-//				ImportMnemonic()
-//			}
-//
-//			Scope(state: /State.recoveryComplete, action: /Action.recoveryComplete) {
-//				RecoverWalletControlWithBDFSComplete()
-//			}
+			Scope(state: /State.importMnemonic, action: /Action.importMnemonic) {
+				ImportMnemonic()
+			}
+
+			Scope(state: /State.recoveryComplete, action: /Action.recoveryComplete) {
+				RecoverWalletControlWithBDFSComplete()
+			}
 		}
 	}
 
@@ -147,57 +160,24 @@ public struct RecoverWalletWithoutProfileCoordinator: Sendable, FeatureReducer {
 	}
 
 	private let destinationPath: WritableKeyPath<State, PresentationState<Destination.State>> = \.$destination
-/*
+
 	public func reduce(into state: inout State, childAction: ChildAction) -> Effect<Action> {
 		switch childAction {
-		case .root(.start(.delegate(.backToStartOfOnboarding))):
-			return .send(.delegate(.backToStartOfOnboarding))
-
-		case .root(.start(.delegate(.dismiss))):
-			return .run { _ in
-				await dismiss()
-			}
-
 		case .root(.start(.delegate(.recoverWithBDFSOnly))):
 			state.path.append(.recoverWalletControlWithBDFSOnly(.init()))
 			return .none
 
 		case .path(.element(_, action: .recoverWalletControlWithBDFSOnly(.delegate(.continue)))):
 			state.path.append(
-				.importMnemonic(
-					.init(
-						// We SHOULD remove the mnemonic from keychain if it we do not
-						// complete this flow.
-						persistStrategy: .init(
-							mnemonicForFactorSourceKind: .onDevice(
-								.babylon
-							),
-							location: .intoKeychainOnly
-						)
-					)
-				)
+				.importMnemonic(.init())
 			)
 			return .none
 
-		case let .path(.element(_, action: .importMnemonic(.delegate(delegateAction)))):
-			switch delegateAction {
-			case let .persistedMnemonicInKeychainOnly(factorSource):
-				guard let fromHash = factorSource.id.extract(FactorSource.ID.FromHash.self) else {
-					fatalError("error handling")
-				}
-				let deviceFactorSource = DeviceFactorSource(id: fromHash, common: .init(), hint: .init(name: "iPhone", model: "iPhone", mnemonicWordCount: .twentyFour))
-				state.factorSourceOfImportedMnemonic = deviceFactorSource
-				state.destination = .accountRecoveryScanCoordinator(.init(purpose: .createProfile(deviceFactorSource), promptForSelectionOfInactiveAccountsIfAny: true))
-				return .none
+		case .path(.element(_, action: .importMnemonic(.delegate(.next)))):
+			state.destination = .accountRecoveryScanCoordinator(.init())
+			return .none
 
-			default:
-				let errorMsg = "Discrepancy! Expected to have saved mnemonic into keychain but other action happened: \(delegateAction)"
-				loggerGlobal.error(.init(stringLiteral: errorMsg))
-				assertionFailure(errorMsg)
-				return .send(.delegate(.dismiss))
-			}
-
-		case .root(.recoveryComplete(.delegate(.profileCreatedFromImportedBDFS))):
+		case .root(.recoveryComplete(.delegate(.next))):
 			return .send(.delegate(.profileCreatedFromImportedBDFS))
 
 		default: return .none
@@ -206,36 +186,17 @@ public struct RecoverWalletWithoutProfileCoordinator: Sendable, FeatureReducer {
 
 	public func reduce(into state: inout State, presentedAction: Destination.Action) -> Effect<Action> {
 		switch presentedAction {
-		case .accountRecoveryScanCoordinator(.delegate(.completed)):
+		case .accountRecoveryScanCoordinator(.delegate(.profileCreatedFromImportedBDFS)):
 			state.destination = nil
 			state.path = .init()
 			// replace root so we cannot go back from `recoveryComplete`
 			state.root = .recoveryComplete(.init())
 			return .none
 
-		case .accountRecoveryScanCoordinator(.delegate(.dismissed)):
-			return deleteSavedUnusedMnemonic(state: state)
-
 		default: return .none
 		}
 	}
 
-	public func reduceDismissedDestination(into state: inout State) -> Effect<Action> {
-		deleteSavedUnusedMnemonic(state: state)
-	}
-
-	private func deleteSavedUnusedMnemonic(state: State) -> Effect<Action> {
-		if
-			let factorSourceID = state.factorSourceOfImportedMnemonic?.id
-		{
-			loggerGlobal.notice("We did not finish Account Recovery Scan Flow. Deleting mnemonic from keychain for safety reasons.")
-			// We did not complete account recovery scan => delete the mnemonic from
-			// keychain for security reasons.
-			try? secureStorageClient.deleteMnemonicByFactorSourceID(factorSourceID)
-		}
-		return .send(.delegate(.dismiss))
-	}
- */
 }
 
 

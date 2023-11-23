@@ -19,6 +19,10 @@
 		4807CB872B0F2D9600FDDD76 /* AccountRecoveryScanCoordinatorFeature.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4807CB862B0F2D9600FDDD76 /* AccountRecoveryScanCoordinatorFeature.swift */; };
 		4807CB8A2B0F2E1B00FDDD76 /* AccountRecoveryScanInProgressFeature.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4807CB892B0F2E1B00FDDD76 /* AccountRecoveryScanInProgressFeature.swift */; };
 		4807CB8C2B0F316700FDDD76 /* Footer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4807CB8B2B0F316700FDDD76 /* Footer.swift */; };
+		4807CB8F2B0F35E200FDDD76 /* RecoverWalletControlWithBDFSOnly.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4807CB8E2B0F35E200FDDD76 /* RecoverWalletControlWithBDFSOnly.swift */; };
+		4807CB922B0F369600FDDD76 /* ImportMnemonicFeature.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4807CB912B0F369600FDDD76 /* ImportMnemonicFeature.swift */; };
+		4807CB952B0F39EE00FDDD76 /* RecoverWalletControlWithBDFSCompleteFeature.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4807CB942B0F39EE00FDDD76 /* RecoverWalletControlWithBDFSCompleteFeature.swift */; };
+		4807CB972B0F451900FDDD76 /* DerivePublicKeysFeature.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4807CB962B0F451900FDDD76 /* DerivePublicKeysFeature.swift */; };
 		480A12432B0E7265009FA3C6 /* TCASendBugApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 480A12422B0E7265009FA3C6 /* TCASendBugApp.swift */; };
 		480A12452B0E7265009FA3C6 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 480A12442B0E7265009FA3C6 /* ContentView.swift */; };
 		480A12472B0E7266009FA3C6 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 480A12462B0E7266009FA3C6 /* Assets.xcassets */; };
@@ -37,6 +41,10 @@
 		4807CB862B0F2D9600FDDD76 /* AccountRecoveryScanCoordinatorFeature.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountRecoveryScanCoordinatorFeature.swift; sourceTree = "<group>"; };
 		4807CB892B0F2E1B00FDDD76 /* AccountRecoveryScanInProgressFeature.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountRecoveryScanInProgressFeature.swift; sourceTree = "<group>"; };
 		4807CB8B2B0F316700FDDD76 /* Footer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Footer.swift; sourceTree = "<group>"; };
+		4807CB8E2B0F35E200FDDD76 /* RecoverWalletControlWithBDFSOnly.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecoverWalletControlWithBDFSOnly.swift; sourceTree = "<group>"; };
+		4807CB912B0F369600FDDD76 /* ImportMnemonicFeature.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImportMnemonicFeature.swift; sourceTree = "<group>"; };
+		4807CB942B0F39EE00FDDD76 /* RecoverWalletControlWithBDFSCompleteFeature.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecoverWalletControlWithBDFSCompleteFeature.swift; sourceTree = "<group>"; };
+		4807CB962B0F451900FDDD76 /* DerivePublicKeysFeature.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DerivePublicKeysFeature.swift; sourceTree = "<group>"; };
 		480A123F2B0E7265009FA3C6 /* TCASendBug.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TCASendBug.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		480A12422B0E7265009FA3C6 /* TCASendBugApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TCASendBugApp.swift; sourceTree = "<group>"; };
 		480A12442B0E7265009FA3C6 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -123,6 +131,9 @@
 		4807CB802B0E76E500FDDD76 /* Children */ = {
 			isa = PBXGroup;
 			children = (
+				4807CB932B0F39E100FDDD76 /* D_RecoverWalletControlWithBDFSComplete */,
+				4807CB902B0F368D00FDDD76 /* C_ImportMnemonic */,
+				4807CB8D2B0F35BF00FDDD76 /* B_RecoverWalletControlWithBDFSOnly */,
 				4807CB812B0E76ED00FDDD76 /* A_RecoverWalletWithoutProfileStart */,
 			);
 			path = Children;
@@ -157,8 +168,33 @@
 			isa = PBXGroup;
 			children = (
 				4807CB892B0F2E1B00FDDD76 /* AccountRecoveryScanInProgressFeature.swift */,
+				4807CB962B0F451900FDDD76 /* DerivePublicKeysFeature.swift */,
 			);
 			path = B_AccountRecoveryScanInProgress;
+			sourceTree = "<group>";
+		};
+		4807CB8D2B0F35BF00FDDD76 /* B_RecoverWalletControlWithBDFSOnly */ = {
+			isa = PBXGroup;
+			children = (
+				4807CB8E2B0F35E200FDDD76 /* RecoverWalletControlWithBDFSOnly.swift */,
+			);
+			path = B_RecoverWalletControlWithBDFSOnly;
+			sourceTree = "<group>";
+		};
+		4807CB902B0F368D00FDDD76 /* C_ImportMnemonic */ = {
+			isa = PBXGroup;
+			children = (
+				4807CB912B0F369600FDDD76 /* ImportMnemonicFeature.swift */,
+			);
+			path = C_ImportMnemonic;
+			sourceTree = "<group>";
+		};
+		4807CB932B0F39E100FDDD76 /* D_RecoverWalletControlWithBDFSComplete */ = {
+			isa = PBXGroup;
+			children = (
+				4807CB942B0F39EE00FDDD76 /* RecoverWalletControlWithBDFSCompleteFeature.swift */,
+			);
+			path = D_RecoverWalletControlWithBDFSComplete;
 			sourceTree = "<group>";
 		};
 		480A12362B0E7265009FA3C6 = {
@@ -278,15 +314,19 @@
 				4807CB722B0E753300FDDD76 /* OnboardingFeature.swift in Sources */,
 				4807CB672B0E73A400FDDD76 /* AppFeature.swift in Sources */,
 				4807CB8C2B0F316700FDDD76 /* Footer.swift in Sources */,
+				4807CB8F2B0F35E200FDDD76 /* RecoverWalletControlWithBDFSOnly.swift in Sources */,
 				4807CB872B0F2D9600FDDD76 /* AccountRecoveryScanCoordinatorFeature.swift in Sources */,
 				4807CB692B0E73C800FDDD76 /* FeatureReducer.swift in Sources */,
 				480A12452B0E7265009FA3C6 /* ContentView.swift in Sources */,
 				4807CB8A2B0F2E1B00FDDD76 /* AccountRecoveryScanInProgressFeature.swift in Sources */,
 				4807CB7E2B0E766C00FDDD76 /* RecoverWalletWithoutProfileCoordinatorFeature.swift in Sources */,
 				4807CB782B0E75CA00FDDD76 /* RestoreProfileFromBackupCoordinatorFeature.swift in Sources */,
+				4807CB972B0F451900FDDD76 /* DerivePublicKeysFeature.swift in Sources */,
+				4807CB922B0F369600FDDD76 /* ImportMnemonicFeature.swift in Sources */,
 				480A12432B0E7265009FA3C6 /* TCASendBugApp.swift in Sources */,
 				4807CB7B2B0E761800FDDD76 /* SelectBackupFeature.swift in Sources */,
 				4807CB752B0E758300FDDD76 /* OnboardingStartupFeature.swift in Sources */,
+				4807CB952B0F39EE00FDDD76 /* RecoverWalletControlWithBDFSCompleteFeature.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
