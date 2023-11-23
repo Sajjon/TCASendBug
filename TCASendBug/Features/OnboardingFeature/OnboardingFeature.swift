@@ -30,7 +30,14 @@ public struct Onboarding: Sendable, FeatureReducer {
 					default: Text("`\(viewStore.status.rawValue)`")
 					}
 				}
-				.destinations(with: store)
+				.sheet(
+					store: store.scope(state: \.$destination, action: { .destination($0) }),
+					state: /Onboarding.Destination.State.derivePublicKeys,
+					action: Onboarding.Destination.Action.derivePublicKeys,
+					content: {
+						DerivePublicKeys.View(store: $0)
+					}
+				)
 			}
 		}
 	}
@@ -54,9 +61,7 @@ public struct Onboarding: Sendable, FeatureReducer {
 			}
 		}
 
-		public init() {
-			
-		}
+		public init() {}
 	}
 
 	public enum ViewAction: Sendable, Equatable {
@@ -90,16 +95,14 @@ public struct Onboarding: Sendable, FeatureReducer {
 
 	public init() {}
 
+
 	public var body: some ReducerOf<Self> {
 		Reduce(core)
-			.ifLet(destinationPath, action: /Action.destination) {
+			.ifLet(\.$destination, action: /Action.destination) {
 				Destination()
 			}
 	}
 
-	private let destinationPath: WritableKeyPath<State, PresentationState<Destination.State>> = \.$destination
-
-	
 	public func reduce(into state: inout State, internalAction: InternalAction) -> Effect<Action> {
 		switch internalAction {
 		case .extremelyImportantInternalActionChangingState:
@@ -146,31 +149,3 @@ public struct Onboarding: Sendable, FeatureReducer {
 
 }
 
-
-private extension StoreOf<Onboarding> {
-	var destination: PresentationStoreOf<Onboarding.Destination> {
-		func scopeState(state: State) -> PresentationState<Onboarding.Destination.State> {
-			state.$destination
-		}
-		return scope(state: scopeState, action: Action.destination)
-	}
-}
-
-@MainActor
-private extension View {
-	func destinations(with store: StoreOf<Onboarding>) -> some View {
-		let destinationStore = store.destination
-		return derivingPublicKeys(with: destinationStore)
-	}
-
-	private func derivingPublicKeys(with destinationStore: PresentationStoreOf<Onboarding.Destination>) -> some View {
-		sheet(
-			store: destinationStore,
-			state: /Onboarding.Destination.State.derivePublicKeys,
-			action: Onboarding.Destination.Action.derivePublicKeys,
-			content: {
-				DerivePublicKeys.View(store: $0)
-			}
-		)
-	}
-}
