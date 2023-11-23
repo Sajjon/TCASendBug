@@ -11,14 +11,36 @@ import SwiftUI
 
 public struct RestoreProfileFromBackupCoordinator: Sendable, FeatureReducer {
 	
+	@MainActor
 	public struct View: SwiftUI.View {
-		public let store: StoreOf<RestoreProfileFromBackupCoordinator>
+		private let store: StoreOf<RestoreProfileFromBackupCoordinator>
+
+		public init(store: StoreOf<RestoreProfileFromBackupCoordinator>) {
+			self.store = store
+		}
+
 		public var body: some SwiftUI.View {
-			VStack {
-				Text("RestoreProfileFromBackupCoordinator")
-//				Button("Next") {
-//					store.send(.view(.next))
-//				}
+			NavigationStackStore(
+				store.scope(state: \.path, action: { .child(.path($0)) })
+			) {
+				path(for: store.scope(state: \.root, action: { .child(.root($0)) }))
+			} destination: {
+				path(for: $0)
+			}
+		}
+
+		private func path(
+			for store: StoreOf<RestoreProfileFromBackupCoordinator.Path>
+		) -> some SwiftUI.View {
+			SwitchStore(store) { state in
+				switch state {
+				case .selectBackup:
+					CaseLet(
+						/RestoreProfileFromBackupCoordinator.Path.State.selectBackup,
+						action: RestoreProfileFromBackupCoordinator.Path.Action.selectBackup,
+						then: { SelectBackup.View(store: $0) }
+					)
+				}
 			}
 		}
 	}
