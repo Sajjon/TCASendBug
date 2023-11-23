@@ -20,22 +20,35 @@ struct App: Sendable, Reducer {
 		}
 
 		var body: some SwiftUI.View {
-			SwitchStore(store.scope(state: \.root, action: Action.child)) { state in
-				switch state {
-				case .main:
-					CaseLet(
-						/App.State.Root.main,
-						action: App.ChildAction.main,
-						then: { Main.View(store: $0) }
-					)
-
-				case .onboarding:
-					CaseLet(
-						/App.State.Root.onboarding,
-						action: App.ChildAction.onboarding,
-						then: { Onboarding.View(store: $0) }
-					)
+			VStack(spacing: 0) {
+				
+				VStack {
+					Button("RESTART APP") {
+						store.send(.view(.restart))
+					}
+					Divider()
 				}
+				.frame(maxWidth: .infinity, idealHeight: 50)
+				.background(Color.gray)
+				
+				SwitchStore(store.scope(state: \.root, action: Action.child)) { state in
+					switch state {
+					case .main:
+						CaseLet(
+							/App.State.Root.main,
+							 action: App.ChildAction.main,
+							 then: { Main.View(store: $0) }
+						)
+						
+					case .onboarding:
+						CaseLet(
+							/App.State.Root.onboarding,
+							 action: App.ChildAction.onboarding,
+							 then: { Onboarding.View(store: $0) }
+						)
+					}
+				}
+				.frame(maxWidth: .infinity, maxHeight: .infinity)
 			}
 		}
 	}
@@ -52,6 +65,11 @@ struct App: Sendable, Reducer {
 
 	enum Action: Sendable, Equatable {
 		case child(ChildAction)
+		case view(ViewAction)
+	}
+	
+	enum ViewAction: Sendable, Equatable {
+		case restart
 	}
 	
 	enum ChildAction: Sendable, Equatable {
@@ -71,8 +89,11 @@ struct App: Sendable, Reducer {
 		}
 		Reduce { state, action in
 			switch action {
+			case .view(.restart):
+				state = .init()
+				return .none
 			case let .child(childAction):
-				reduce(into: &state, childAction: childAction)
+				return reduce(into: &state, childAction: childAction)
 			}
 		}
 	}

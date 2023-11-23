@@ -18,18 +18,45 @@ struct Onboarding: Sendable, Reducer {
 		let store: StoreOf<Onboarding>
 		var body: some SwiftUI.View {
 			WithViewStore(store, observe: { $0 }, send: { .view($0) }) { viewStore in
-				VStack {
+				VStack(spacing: 30) {
 					Text("Onboarding")
+						.font(.largeTitle)
+					Spacer(minLength: 0)
 					switch viewStore.status {
 					case .new:
-						Button("Start") {
-							store.send(.view(.start))
-						}
+							Toggle(
+								isOn: viewStore.binding(
+									get: \.shouldNilDestinationBeforeScanning,
+									send: { .toggledShouldNilDestinationBeforeScanning($0) }
+								)) {
+									Text("Nil `destination` before scanning")
+									Text("when set together with a high sleep duration causes crash.")
+								}
+							
+							TextField(
+								text: viewStore.binding(
+									get: \.sleepDurationInMSString,
+									send: { .sleepDurationInMSStringChanged($0) }
+								)
+							) {
+								Text("Sleep duration - higher than 500 ms when nilling `destination` is `true` will crash the app")
+							}
+							
+							Button("Start") {
+								store.send(.view(.start))
+							}
 					case .scanningNetworkForActiveAccounts:
 						ProgressView()
+							.controlSize(.large)
+							.tint(.purple)
+
+						Text("Scanning (network request), this should finish after: `\(viewStore.sleepDurationInMSString) ms`.\n\nIf the task does not finish, then we have a 'TCA Send'-bug, meaning that an event sent inside `run` is never received, due to `run` task being cancelled.")
+						Spacer(minLength: 0)
 					default: Text("`\(viewStore.status.rawValue)`")
 					}
+					Spacer(minLength: 0)
 				}
+				.padding()
 				.sheet(
 					store: store.scope(state: \.$destination, action: { .destination($0) }),
 					state: /Onboarding.Destination.State.derivePublicKeys,
@@ -49,6 +76,14 @@ struct Onboarding: Sendable, Reducer {
 			case scanningNetworkForActiveAccounts
 		}
 
+		var shouldNilDestinationBeforeScanning: Bool = true
+		var sleepDurationInMSString = "2000"
+		var sleepDuration: Duration? {
+			guard let ms = Int(sleepDurationInMSString) else {
+				return nil
+			}
+			return .milliseconds(ms)
+		}
 		var status: Status = .new
 	
 		@PresentationState
@@ -57,6 +92,8 @@ struct Onboarding: Sendable, Reducer {
 
 	enum ViewAction: Sendable, Equatable {
 		case start
+		case toggledShouldNilDestinationBeforeScanning(Bool)
+		case sleepDurationInMSStringChanged(String)
 		case continueTapped
 	}
 	
@@ -126,6 +163,15 @@ struct Onboarding: Sendable, Reducer {
 
 	func reduce(into state: inout State, viewAction: ViewAction) -> Effect<Action> {
 		switch viewAction {
+			
+		case let .toggledShouldNilDestinationBeforeScanning(newValue):
+			state.shouldNilDestinationBeforeScanning = newValue
+			return .none
+			
+		case let .sleepDurationInMSStringChanged(newValue):
+			state.sleepDurationInMSString = newValue
+			return .none
+			
 		case .start:
 			state.status = .derivingPublicKeys
 			state.destination = .derivePublicKeys(.init())
@@ -144,19 +190,25 @@ struct Onboarding: Sendable, Reducer {
 		}
 	}
 
+	// ‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️
+	//
+	// Behaviour:
+	// * A: set `state.destination = nil`
+	// * B: sleep inside `.run` for more than 500ms
+	//
+	// If an A) AND B) is true, we get a crash.
+	//
+	// ‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️
 	private func scanOnLedger(state: inout State) -> Effect<Action> {
-		state.destination = nil
+		guard let sleepDurationInMS = state.sleepDuration else {
+			fatalError("Expected valid duration")
+		}
+		if state.shouldNilDestinationBeforeScanning {
+			state.destination = nil
+		}
 		state.status = .scanningNetworkForActiveAccounts
-
 		return .run { send in
-			// ‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️
-			// ‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️
-			// ‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️
-			// ‼️‼️‼️‼️‼️‼️‼️ 		WHAT WE DO HERE	   ‼️‼️‼️‼️‼️‼️‼️‼️‼️
-			// ‼️‼️‼️‼️‼️‼️‼️		TRIGGERS THE BUG   ‼️‼️‼️‼️‼️‼️‼️‼️‼️
-			// ‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️
-			// ‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️
-			try! await Task.sleep(for: .seconds(2)) // CRASH!
+			try? await Task.sleep(for: sleepDurationInMS)
 			await send(.internal(.extremelyImportantInternalActionChangingState))
 		}
 	}

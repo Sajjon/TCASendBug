@@ -17,6 +17,10 @@ struct DerivePublicKeys: Reducer {
 		var body: some SwiftUI.View {
 			VStack {
 				Text("DerivePublicKeys...")
+				
+				ProgressView()
+					.controlSize(.large)
+					.tint(Color.green)
 			}
 			.task {
 				await store.send(.view(.task)).finish()
