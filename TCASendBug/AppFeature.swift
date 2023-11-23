@@ -12,7 +12,6 @@ import CryptoKit
 import OSLog
 let log = Logger()
 
-
 @Reducer
 struct App {
 	
@@ -82,25 +81,28 @@ struct App {
 		var body: some SwiftUI.View {
 			WithViewStore(store, observe: { $0 }) { viewStore in
 				VStack {
-					Text("APP")
+					Text("APP FEATURE")
+						.font(.largeTitle)
+					Spacer()
 					switch viewStore.status {
-					case .idle: 
+					case .idle:
 						Text("Idle")
 					case .requestInFlight:
 						ProgressView().controlSize(.extraLarge)
 						Text("Request that might never finish due to send-bug is running...")
 					case .successfullyFinished:
-						Text("Successfully finished:")
+						Text("Successfully finished")
 					}
+					Spacer()
 				}
-					.sheet(
-						store: store.scope(state: \.$destination, action: { .destination($0) }),
-						state: /App.Destination.State.modal,
-						action: App.Destination.Action.modal,
-						content: {
-							Modal.View(store: $0)
-						}
-					)
+				.sheet(
+					store: store.scope(state: \.$destination, action: { .destination($0) }),
+					state: /App.Destination.State.modal,
+					action: App.Destination.Action.modal,
+					content: {
+						Modal.View(store: $0)
+					}
+				)
 			}
 		}
 	}
@@ -115,34 +117,4 @@ func slowTask(name: String) async {
 		}
 	}.value
 	log.info("Slow task - '\(name)' DONE")
-}
-
-@Reducer
-struct Modal {
-	struct State: Sendable, Hashable {}
-	enum Action: Sendable, Equatable {
-		case onTask
-		case done
-	}
-	struct View: SwiftUI.View {
-		let store: StoreOf<Modal>
-		var body: some SwiftUI.View {
-			Text("MODAL")
-				.task {
-					await store.send(.onTask).finish()
-				}
-		}
-	}
-	var body: some ReducerOf<Modal> {
-		Reduce { state, action in
-			switch action {
-			case .onTask:
-				return .run { send in
-					await slowTask(name: "From MODAL")
-					await send(.done)
-				}
-			default: return .none
-			}
-		}
-	}
 }
