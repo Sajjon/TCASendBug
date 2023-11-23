@@ -29,7 +29,7 @@ struct App {
 		state.status = .requestInFlight
 		state.modal = nil // 💡 <-- COMMENTING OUT THIS ✅🐞 NO BUG
 		return .run { send in
-			await slowTask(name: "App", iterations: 10_000) // 💡<--- OR IF YOU LOWER `iteration` to e.g `5000` ✅🐞 NO BUG
+			await slowTask(name: "App", iterations: 10_000) // 💡<--- OR IF YOU LOWER `iteration` to e.g `500` ✅🐞 NO BUG
 			log.notice("`await send(.successfullyFinished)` is about to get called...")
 			await send(.successfullyFinished)
 			log.notice("`await send(.successfullyFinished)` called? Ever received???")
