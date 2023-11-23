@@ -6,6 +6,8 @@ This demo app is using TCA version `1.4.2` - but we have been experiencing this 
 
 **Possibly the bug might stem from SwiftUI itself...? I do not know!**
 
+Take a look at `Onboarding` inside the method `scanOnLedger` at the very top of [`OnboardingFeature.swift`](./TCASendBug/Features/OnboardingFeature/OnboardingFeature.swift).
+
 # Demo
 
 In the demo below, notice how we by using standard configuration never proceeded to the green "Success" screen. But when restarting the app, and changing either the toggle (i.e. **not** nilling `destination`) or lowering the duration of the scan to `100` ms, the flow succeds and we proceed to the green "Success" screen.
