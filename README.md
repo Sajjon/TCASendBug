@@ -4,5 +4,7 @@ This small app shows a bug in [TCA](https://github.com/pointfreeco/swift-composa
 
 # Demo
 
+In the demo below, notice how we by using standard configuration never proceeded to the green "Success" screen. But when restarting the app, and changing either the toggle (i.e. **not** nilling `destination`) or lowering the duration of the scan to `100` ms, the flow succeds and we proceed to the green "Success" screen.
+
 https://github.com/Sajjon/TCASendBug/assets/864410/622fab3f-aef0-4a7b-ac1a-60057d5e7b72
 
