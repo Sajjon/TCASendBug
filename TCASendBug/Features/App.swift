@@ -25,6 +25,9 @@ struct App {
 			default: return .none
 			}
 		}
+		.ifLet(\.$destination, action: /Action.destination) {
+			Destination()
+		}
 	}
 	
 	func proceedToNextSlowTask(state: inout State) -> Effect<Action> {
@@ -40,6 +43,7 @@ struct App {
 		var destination: Destination.State?
 		var successfullyFinished = false
 		init() {
+			log.debug("App start")
 			self.destination = .modal(.init())
 		}
 	}
@@ -64,9 +68,8 @@ struct App {
 	}
 	struct View: SwiftUI.View {
 		let store: StoreOf<App>
-		struct ViewState: Equatable { let successfullyFinished: Bool }
 		var body: some SwiftUI.View {
-			WithViewStore(store, observe: { ViewState(successfullyFinished: $0.successfullyFinished) }) { viewStore in
+			WithViewStore(store, observe: { $0 }) { viewStore in
 				VStack {
 					Text("APP")
 					if viewStore.successfullyFinished {
@@ -105,6 +108,7 @@ func slowTask(name: String) async {
 struct Modal {
 	struct State: Sendable, Hashable {}
 	enum Action: Sendable, Equatable {
+		case onTask
 		case done
 	}
 	struct View: SwiftUI.View {
@@ -112,12 +116,22 @@ struct Modal {
 		var body: some SwiftUI.View {
 			Text("MODAL")
 				.task {
-					await slowTask(name: "From MODAL")
-					store.send(.done)
+					log.debug("Modal View body `task`")
+					await store.send(.onTask).finish()
 				}
 		}
 	}
 	var body: some ReducerOf<Modal> {
-		EmptyReducer()
+		Reduce { state, action in
+			switch action {
+			case .onTask:
+				log.debug("Modal - onTask, starting slow task")
+				return .run { send in
+					await slowTask(name: "From MODAL")
+					await send(.done)
+				}
+			default: return .none
+			}
+		}
 	}
 }
