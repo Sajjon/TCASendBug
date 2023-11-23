@@ -4,6 +4,8 @@ This small app shows a bug in [TCA](https://github.com/pointfreeco/swift-composa
 
 This demo app is using TCA version `1.4.2` - but we have been experiencing this bug for a long time with much older TCA version than that.
 
+**Possibly the bug might stem from SwiftUI itself...? I do not know!**
+
 # Demo
 
 In the demo below, notice how we by using standard configuration never proceeded to the green "Success" screen. But when restarting the app, and changing either the toggle (i.e. **not** nilling `destination`) or lowering the duration of the scan to `100` ms, the flow succeds and we proceed to the green "Success" screen.
