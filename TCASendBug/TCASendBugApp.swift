@@ -10,15 +10,15 @@ import ComposableArchitecture
 
 @main
 struct TCASendBugApp: SwiftUI.App {
+	typealias Root = RecoverWalletWithoutProfileCoordinator
 	var body: some SwiftUI.Scene {
 		WindowGroup {
 			if !_XCTIsTesting {
-				App.View(
+				Root.View(
 					store: Store(
-						initialState: App.State()
+						initialState: Root.State()
 					) {
-						App()
-							._printChanges()
+						Root()
 					}
 				)
 				.buttonStyle(.borderedProminent)

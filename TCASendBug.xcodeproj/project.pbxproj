@@ -7,13 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		4807CB672B0E73A400FDDD76 /* AppFeature.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4807CB662B0E73A400FDDD76 /* AppFeature.swift */; };
 		4807CB692B0E73C800FDDD76 /* FeatureReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4807CB682B0E73C800FDDD76 /* FeatureReducer.swift */; };
 		4807CB6F2B0E749D00FDDD76 /* ComposableArchitecture in Frameworks */ = {isa = PBXBuildFile; productRef = 4807CB6E2B0E749D00FDDD76 /* ComposableArchitecture */; };
-		4807CB722B0E753300FDDD76 /* OnboardingFeature.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4807CB712B0E753300FDDD76 /* OnboardingFeature.swift */; };
-		4807CB752B0E758300FDDD76 /* OnboardingStartupFeature.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4807CB742B0E758300FDDD76 /* OnboardingStartupFeature.swift */; };
-		4807CB782B0E75CA00FDDD76 /* RestoreProfileFromBackupCoordinatorFeature.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4807CB772B0E75CA00FDDD76 /* RestoreProfileFromBackupCoordinatorFeature.swift */; };
-		4807CB7B2B0E761800FDDD76 /* SelectBackupFeature.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4807CB7A2B0E761800FDDD76 /* SelectBackupFeature.swift */; };
 		4807CB7E2B0E766C00FDDD76 /* RecoverWalletWithoutProfileCoordinatorFeature.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4807CB7D2B0E766C00FDDD76 /* RecoverWalletWithoutProfileCoordinatorFeature.swift */; };
 		4807CB832B0E76F700FDDD76 /* RecoverWalletWithoutProfileStartFeature.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4807CB822B0E76F700FDDD76 /* RecoverWalletWithoutProfileStartFeature.swift */; };
 		4807CB872B0F2D9600FDDD76 /* AccountRecoveryScanCoordinatorFeature.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4807CB862B0F2D9600FDDD76 /* AccountRecoveryScanCoordinatorFeature.swift */; };
@@ -30,12 +25,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		4807CB662B0E73A400FDDD76 /* AppFeature.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppFeature.swift; sourceTree = "<group>"; };
 		4807CB682B0E73C800FDDD76 /* FeatureReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeatureReducer.swift; sourceTree = "<group>"; };
-		4807CB712B0E753300FDDD76 /* OnboardingFeature.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingFeature.swift; sourceTree = "<group>"; };
-		4807CB742B0E758300FDDD76 /* OnboardingStartupFeature.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingStartupFeature.swift; sourceTree = "<group>"; };
-		4807CB772B0E75CA00FDDD76 /* RestoreProfileFromBackupCoordinatorFeature.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestoreProfileFromBackupCoordinatorFeature.swift; sourceTree = "<group>"; };
-		4807CB7A2B0E761800FDDD76 /* SelectBackupFeature.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectBackupFeature.swift; sourceTree = "<group>"; };
 		4807CB7D2B0E766C00FDDD76 /* RecoverWalletWithoutProfileCoordinatorFeature.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecoverWalletWithoutProfileCoordinatorFeature.swift; sourceTree = "<group>"; };
 		4807CB822B0E76F700FDDD76 /* RecoverWalletWithoutProfileStartFeature.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecoverWalletWithoutProfileStartFeature.swift; sourceTree = "<group>"; };
 		4807CB862B0F2D9600FDDD76 /* AccountRecoveryScanCoordinatorFeature.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountRecoveryScanCoordinatorFeature.swift; sourceTree = "<group>"; };
@@ -67,74 +57,29 @@
 		4807CB642B0E739600FDDD76 /* Features */ = {
 			isa = PBXGroup;
 			children = (
-				4807CB652B0E739900FDDD76 /* 0_App */,
-				4807CB702B0E74F800FDDD76 /* 1_Onboarding */,
-				4807CB732B0E757400FDDD76 /* 2_OnboardingStartup */,
-				4807CB762B0E75BB00FDDD76 /* 3_RestoreProfileFromBackupCoordinator */,
-				4807CB792B0E760600FDDD76 /* 4_SelectBackup */,
-				4807CB7C2B0E764F00FDDD76 /* 5_RecoverWalletWithoutProfileCoordinator */,
-				4807CB842B0F2D7300FDDD76 /* 6_AccountRecoveryScan */,
+				4807CB7C2B0E764F00FDDD76 /* RecoverWalletWithoutProfileCoordinator */,
+				4807CB842B0F2D7300FDDD76 /* AccountRecoveryScan */,
 				4807CB682B0E73C800FDDD76 /* FeatureReducer.swift */,
 			);
 			path = Features;
 			sourceTree = "<group>";
 		};
-		4807CB652B0E739900FDDD76 /* 0_App */ = {
-			isa = PBXGroup;
-			children = (
-				4807CB662B0E73A400FDDD76 /* AppFeature.swift */,
-			);
-			path = 0_App;
-			sourceTree = "<group>";
-		};
-		4807CB702B0E74F800FDDD76 /* 1_Onboarding */ = {
-			isa = PBXGroup;
-			children = (
-				4807CB712B0E753300FDDD76 /* OnboardingFeature.swift */,
-			);
-			path = 1_Onboarding;
-			sourceTree = "<group>";
-		};
-		4807CB732B0E757400FDDD76 /* 2_OnboardingStartup */ = {
-			isa = PBXGroup;
-			children = (
-				4807CB742B0E758300FDDD76 /* OnboardingStartupFeature.swift */,
-			);
-			path = 2_OnboardingStartup;
-			sourceTree = "<group>";
-		};
-		4807CB762B0E75BB00FDDD76 /* 3_RestoreProfileFromBackupCoordinator */ = {
-			isa = PBXGroup;
-			children = (
-				4807CB772B0E75CA00FDDD76 /* RestoreProfileFromBackupCoordinatorFeature.swift */,
-			);
-			path = 3_RestoreProfileFromBackupCoordinator;
-			sourceTree = "<group>";
-		};
-		4807CB792B0E760600FDDD76 /* 4_SelectBackup */ = {
-			isa = PBXGroup;
-			children = (
-				4807CB7A2B0E761800FDDD76 /* SelectBackupFeature.swift */,
-			);
-			path = 4_SelectBackup;
-			sourceTree = "<group>";
-		};
-		4807CB7C2B0E764F00FDDD76 /* 5_RecoverWalletWithoutProfileCoordinator */ = {
+		4807CB7C2B0E764F00FDDD76 /* RecoverWalletWithoutProfileCoordinator */ = {
 			isa = PBXGroup;
 			children = (
 				4807CB802B0E76E500FDDD76 /* Children */,
 				4807CB7D2B0E766C00FDDD76 /* RecoverWalletWithoutProfileCoordinatorFeature.swift */,
 			);
-			path = 5_RecoverWalletWithoutProfileCoordinator;
+			path = RecoverWalletWithoutProfileCoordinator;
 			sourceTree = "<group>";
 		};
 		4807CB802B0E76E500FDDD76 /* Children */ = {
 			isa = PBXGroup;
 			children = (
-				4807CB932B0F39E100FDDD76 /* D_RecoverWalletControlWithBDFSComplete */,
-				4807CB902B0F368D00FDDD76 /* C_ImportMnemonic */,
-				4807CB8D2B0F35BF00FDDD76 /* B_RecoverWalletControlWithBDFSOnly */,
 				4807CB812B0E76ED00FDDD76 /* A_RecoverWalletWithoutProfileStart */,
+				4807CB8D2B0F35BF00FDDD76 /* B_RecoverWalletControlWithBDFSOnly */,
+				4807CB902B0F368D00FDDD76 /* C_ImportMnemonic */,
+				4807CB932B0F39E100FDDD76 /* D_RecoverWalletControlWithBDFSComplete */,
 			);
 			path = Children;
 			sourceTree = "<group>";
@@ -147,13 +92,13 @@
 			path = A_RecoverWalletWithoutProfileStart;
 			sourceTree = "<group>";
 		};
-		4807CB842B0F2D7300FDDD76 /* 6_AccountRecoveryScan */ = {
+		4807CB842B0F2D7300FDDD76 /* AccountRecoveryScan */ = {
 			isa = PBXGroup;
 			children = (
 				4807CB882B0F2E0700FDDD76 /* B_AccountRecoveryScanInProgress */,
 				4807CB852B0F2D7B00FDDD76 /* A_AccountRecoveryScanCoordinator */,
 			);
-			path = 6_AccountRecoveryScan;
+			path = AccountRecoveryScan;
 			sourceTree = "<group>";
 		};
 		4807CB852B0F2D7B00FDDD76 /* A_AccountRecoveryScanCoordinator */ = {
@@ -311,8 +256,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				4807CB832B0E76F700FDDD76 /* RecoverWalletWithoutProfileStartFeature.swift in Sources */,
-				4807CB722B0E753300FDDD76 /* OnboardingFeature.swift in Sources */,
-				4807CB672B0E73A400FDDD76 /* AppFeature.swift in Sources */,
 				4807CB8C2B0F316700FDDD76 /* Footer.swift in Sources */,
 				4807CB8F2B0F35E200FDDD76 /* RecoverWalletControlWithBDFSOnly.swift in Sources */,
 				4807CB872B0F2D9600FDDD76 /* AccountRecoveryScanCoordinatorFeature.swift in Sources */,
@@ -320,12 +263,9 @@
 				480A12452B0E7265009FA3C6 /* ContentView.swift in Sources */,
 				4807CB8A2B0F2E1B00FDDD76 /* AccountRecoveryScanInProgressFeature.swift in Sources */,
 				4807CB7E2B0E766C00FDDD76 /* RecoverWalletWithoutProfileCoordinatorFeature.swift in Sources */,
-				4807CB782B0E75CA00FDDD76 /* RestoreProfileFromBackupCoordinatorFeature.swift in Sources */,
 				4807CB972B0F451900FDDD76 /* DerivePublicKeysFeature.swift in Sources */,
 				4807CB922B0F369600FDDD76 /* ImportMnemonicFeature.swift in Sources */,
 				480A12432B0E7265009FA3C6 /* TCASendBugApp.swift in Sources */,
-				4807CB7B2B0E761800FDDD76 /* SelectBackupFeature.swift in Sources */,
-				4807CB752B0E758300FDDD76 /* OnboardingStartupFeature.swift in Sources */,
 				4807CB952B0F39EE00FDDD76 /* RecoverWalletControlWithBDFSCompleteFeature.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
