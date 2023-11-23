@@ -9,7 +9,7 @@ import Foundation
 import SwiftUI
 import ComposableArchitecture
 
-struct App: Sendable, FeatureReducer {
+struct App: Sendable, Reducer {
 	
 	@MainActor
 	struct View: SwiftUI.View {
@@ -49,7 +49,10 @@ struct App: Sendable, FeatureReducer {
 		var root: Root = .onboarding(.init())
 		
 	}
-	
+
+	enum Action: Sendable, Equatable {
+		case child(ChildAction)
+	}
 	
 	enum ChildAction: Sendable, Equatable {
 		case main(Main.Action)
@@ -66,7 +69,12 @@ struct App: Sendable, FeatureReducer {
 					Onboarding()
 				}
 		}
-		Reduce(core)
+		Reduce { state, action in
+			switch action {
+			case let .child(childAction):
+				reduce(into: &state, childAction: childAction)
+			}
+		}
 	}
 
 	
