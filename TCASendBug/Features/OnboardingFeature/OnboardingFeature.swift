@@ -12,7 +12,7 @@ import ComposableArchitecture
 
 // `AccountRecoveryScanInProgress`
 // https://github.com/radixdlt/babylon-wallet-ios/blob/ABW-2412_restore_wallet_from_mnemonic_only/RadixWallet/Features/AccountRecoveryScan/Children/AccountRecoveryScanInProgress/AccountRecoveryScanInProgress.swift
-struct Onboarding: Sendable, FeatureReducer {
+struct Onboarding: Sendable, Reducer {
 	
 	struct View: SwiftUI.View {
 		let store: StoreOf<Onboarding>
@@ -68,7 +68,7 @@ struct Onboarding: Sendable, FeatureReducer {
 		case complete
 	}
 
-	struct Destination: DestinationReducer {
+	struct Destination: Reducer {
 		enum State: Sendable, Hashable {
 			case derivePublicKeys(DerivePublicKeys.State)
 		}
@@ -83,12 +83,34 @@ struct Onboarding: Sendable, FeatureReducer {
 			}
 		}
 	}
+	
+	enum Action: Sendable, Equatable {
+		case view(ViewAction)
+		case `internal`(InternalAction)
+		case delegate(DelegateAction)
+		case destination(PresentationAction<Destination.Action>)
+	}
+	
 
 	init() {}
 
 
 	var body: some ReducerOf<Self> {
-		Reduce(core)
+		Reduce { state, action in
+			switch action {
+			case let .view(viewAction):
+				return reduce(into: &state, viewAction: viewAction)
+			case let .`internal`(internalAction):
+				return reduce(into: &state, internalAction: internalAction)
+			case .destination(.dismiss):
+				return .none
+			case let .destination(.presented(presentedAction)):
+				return reduce(into: &state, presentedAction: presentedAction)
+
+			case .delegate:
+				return .none
+			}
+		}
 			.ifLet(\.$destination, action: /Action.destination) {
 				Destination()
 			}

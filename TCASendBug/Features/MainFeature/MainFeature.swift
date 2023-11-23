@@ -9,7 +9,7 @@ import Foundation
 import SwiftUI
 import ComposableArchitecture
 
-struct Main: Sendable, FeatureReducer {
+struct Main: Sendable, Reducer {
 	struct View: SwiftUI.View {
 		let store: StoreOf<Main>
 		var body: some SwiftUI.View {
@@ -25,5 +25,8 @@ struct Main: Sendable, FeatureReducer {
 		}
 	}
 	struct State: Sendable, Hashable {}
-	
+	enum Action: Sendable, Hashable {}
+	var body: some ReducerOf<Self> {
+		EmptyReducer()
+	}
 }
