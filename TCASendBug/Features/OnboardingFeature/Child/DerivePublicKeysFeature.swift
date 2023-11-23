@@ -10,7 +10,7 @@ import SwiftUI
 import ComposableArchitecture
 import CryptoKit
 
-struct DerivePublicKeys: FeatureReducer {
+struct DerivePublicKeys: Reducer {
 	@MainActor
 	struct View: SwiftUI.View {
 		let store: StoreOf<DerivePublicKeys>
@@ -37,6 +37,26 @@ struct DerivePublicKeys: FeatureReducer {
 	enum DelegateAction: Sendable, Equatable {
 		case completed
 	}
+	
+	enum Action: Sendable, Equatable {
+		case view(ViewAction)
+		case `internal`(InternalAction)
+		case delegate(DelegateAction)
+	}
+	
+	var body: some ReducerOf<Self> {
+		Reduce { state, action in
+			switch action {
+			case let .view(viewAction):
+				return reduce(into: &state, viewAction: viewAction)
+			case let .`internal`(internalAction):
+				return reduce(into: &state, internalAction: internalAction)
+			case .delegate:
+				return .none
+			}
+		}
+	}
+	
 	private static let msgWhenDone = "Successfully DerivedKeys, delegating 'completed' now."
 	func reduce(into state: inout State, internalAction: InternalAction) -> Effect<Action> {
 		switch internalAction {
