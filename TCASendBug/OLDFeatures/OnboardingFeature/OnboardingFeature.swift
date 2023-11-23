@@ -12,7 +12,7 @@ import ComposableArchitecture
 
 // `AccountRecoveryScanInProgress`
 // https://github.com/radixdlt/babylon-wallet-ios/blob/ABW-2412_restore_wallet_from_mnemonic_only/RadixWallet/Features/AccountRecoveryScan/Children/AccountRecoveryScanInProgress/AccountRecoveryScanInProgress.swift
-struct Onboarding: Sendable, Reducer {
+struct OldOnboarding: Sendable, Reducer {
 	
 	// ‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️
 	//
@@ -38,7 +38,7 @@ struct Onboarding: Sendable, Reducer {
 	}
 	
 	struct View: SwiftUI.View {
-		let store: StoreOf<Onboarding>
+		let store: StoreOf<OldOnboarding>
 		var body: some SwiftUI.View {
 			WithViewStore(store, observe: { $0 }, send: { .view($0) }) { viewStore in
 				VStack(alignment: .center, spacing: 30) {
@@ -47,7 +47,7 @@ struct Onboarding: Sendable, Reducer {
 					Spacer(minLength: 0)
 					switch viewStore.status {
 					case .new:
-						Text(LocalizedStringKey("Presents `DerivePublicKeys` inside `@PresentationState var destination` as a `sheet`. When `DerivePublicKeys` is done it will delegate to this reducer which will continue with 'Scanning' (network request, which we just mock as a `Task.sleep`).\n\n**If we set `state.destination = nil` before scanning AND duration of scan is ~ \(Onboarding.State.approxMinSleepDurationCausingBug)ms (or more) triggers bug.**\n\n🐞The bug is that the `Effect<Action>.run` gets cancelled, meaning our reducer never receives a sent action.🪲"))
+						Text(LocalizedStringKey("Presents `DerivePublicKeys` inside `@PresentationState var destination` as a `sheet`. When `DerivePublicKeys` is done it will delegate to this reducer which will continue with 'Scanning' (network request, which we just mock as a `Task.sleep`).\n\n**If we set `state.destination = nil` before scanning AND duration of scan is ~ \(OldOnboarding.State.approxMinSleepDurationCausingBug)ms (or more) triggers bug.**\n\n🐞The bug is that the `Effect<Action>.run` gets cancelled, meaning our reducer never receives a sent action.🪲"))
 						
 						Divider()
 						
@@ -94,8 +94,8 @@ struct Onboarding: Sendable, Reducer {
 				.padding()
 				.sheet(
 					store: store.scope(state: \.$destination, action: { .destination($0) }),
-					state: /Onboarding.Destination.State.derivePublicKeys,
-					action: Onboarding.Destination.Action.derivePublicKeys,
+					state: /OldOnboarding.Destination.State.derivePublicKeys,
+					action: OldOnboarding.Destination.Action.derivePublicKeys,
 					content: {
 						DerivePublicKeys.View(store: $0)
 					}

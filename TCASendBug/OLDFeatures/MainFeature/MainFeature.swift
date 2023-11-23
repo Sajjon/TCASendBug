@@ -9,9 +9,9 @@ import Foundation
 import SwiftUI
 import ComposableArchitecture
 
-struct Main: Sendable, Reducer {
+struct OldMain: Sendable, Reducer {
 	struct View: SwiftUI.View {
-		let store: StoreOf<Main>
+		let store: StoreOf<OldMain>
 		var body: some SwiftUI.View {
 			VStack {
 				Text("SUCCESS!")

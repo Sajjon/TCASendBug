@@ -9,13 +9,13 @@ import Foundation
 import SwiftUI
 import ComposableArchitecture
 
-struct App: Sendable, Reducer {
+struct OldApp: Sendable, Reducer {
 	
 	@MainActor
 	struct View: SwiftUI.View {
-		private let store: StoreOf<App>
+		private let store: StoreOf<OldApp>
 
-		init(store: StoreOf<App>) {
+		init(store: StoreOf<OldApp>) {
 			self.store = store
 		}
 
@@ -35,16 +35,16 @@ struct App: Sendable, Reducer {
 					switch state {
 					case .main:
 						CaseLet(
-							/App.State.Root.main,
-							 action: App.ChildAction.main,
-							 then: { Main.View(store: $0) }
+							/OldApp.State.Root.main,
+							 action: OldApp.ChildAction.main,
+							 then: { OldMain.View(store: $0) }
 						)
 						
 					case .onboarding:
 						CaseLet(
-							/App.State.Root.onboarding,
-							 action: App.ChildAction.onboarding,
-							 then: { Onboarding.View(store: $0) }
+							/OldApp.State.Root.onboarding,
+							 action: OldApp.ChildAction.onboarding,
+							 then: { OldOnboarding.View(store: $0) }
 						)
 					}
 				}
@@ -55,8 +55,8 @@ struct App: Sendable, Reducer {
 	
 	struct State: Hashable {
 		enum Root: Hashable {
-			case onboarding(Onboarding.State)
-			case main(Main.State)
+			case onboarding(OldOnboarding.State)
+			case main(OldMain.State)
 		}
 		
 		var root: Root = .onboarding(.init())
@@ -73,18 +73,18 @@ struct App: Sendable, Reducer {
 	}
 	
 	enum ChildAction: Sendable, Equatable {
-		case main(Main.Action)
-		case onboarding(Onboarding.Action)
+		case main(OldMain.Action)
+		case onboarding(OldOnboarding.Action)
 	}
 	
 	var body: some ReducerOf<Self> {
 		Scope(state: \.root, action: /Action.child) {
 			EmptyReducer()
 				.ifCaseLet(/State.Root.main, action: /ChildAction.main) {
-					Main()
+					OldMain()
 				}
 				.ifCaseLet(/State.Root.onboarding, action: /ChildAction.onboarding) {
-					Onboarding()
+					OldOnboarding()
 				}
 		}
 		Reduce { state, action in
