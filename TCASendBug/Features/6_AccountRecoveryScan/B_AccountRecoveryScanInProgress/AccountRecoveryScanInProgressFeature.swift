@@ -68,7 +68,7 @@ public struct AccountRecoveryScanInProgress: Sendable, FeatureReducer {
 		case appear
 		case continueTapped
 	}
-
+	
 	public enum InternalAction: Sendable, Equatable {
 		case extremelyImportantInternalActionChangingState
 	}
@@ -103,6 +103,14 @@ public struct AccountRecoveryScanInProgress: Sendable, FeatureReducer {
 	}
 
 	private let destinationPath: WritableKeyPath<State, PresentationState<Destination.State>> = \.$destination
+
+	
+	public func reduce(into state: inout State, internalAction: InternalAction) -> Effect<Action> {
+		switch internalAction {
+		case .extremelyImportantInternalActionChangingState:
+			return .send(.delegate(.complete))
+		}
+	}
 
 
 	public func reduce(into state: inout State, viewAction: ViewAction) -> Effect<Action> {
