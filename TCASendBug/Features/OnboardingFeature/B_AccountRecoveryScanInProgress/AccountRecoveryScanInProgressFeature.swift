@@ -141,7 +141,7 @@ extension AccountRecoveryScanInProgress {
 			// ‼️‼️‼️‼️‼️‼️‼️		TRIGGERS THE BUG   ‼️‼️‼️‼️‼️‼️‼️‼️‼️
 			// ‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️
 			// ‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️
-			try! await Task.sleep(for: .seconds(0.1)) // CRASH!
+			try! await Task.sleep(for: .seconds(2)) // CRASH!
 			await send(.internal(.extremelyImportantInternalActionChangingState))
 		}
 	}

@@ -17,9 +17,9 @@ public struct DerivePublicKeys: FeatureReducer {
 			VStack {
 				Text("DerivePublicKeys...")
 			}
-			.onFirstTask { @MainActor in
-				await store.send(.view(.onFirstTask)).finish()
-			}
+			.task {
+				await store.send(.view(.task)).finish()
+			 }
 		}
 	}
 	
@@ -28,9 +28,8 @@ public struct DerivePublicKeys: FeatureReducer {
 	}
 	
 	public enum ViewAction: Sendable, Equatable {
-		case onFirstTask
+		case task
 	}
-	
 	
 	public enum InternalAction: Sendable, Equatable {
 		case deriveKeys
@@ -50,7 +49,7 @@ public struct DerivePublicKeys: FeatureReducer {
 	
 	public func reduce(into state: inout State, viewAction: ViewAction) -> Effect<Action> {
 		switch viewAction {
-		case .onFirstTask:
+		case .task:
 			return .run { send in
 				await deriveKeys(doneMessage: Self.msgWhenDone)
 				await send(.internal(.deriveKeys))
