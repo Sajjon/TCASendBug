@@ -12,11 +12,11 @@ import ComposableArchitecture
 
 // `AccountRecoveryScanInProgress`
 // https://github.com/radixdlt/babylon-wallet-ios/blob/ABW-2412_restore_wallet_from_mnemonic_only/RadixWallet/Features/AccountRecoveryScan/Children/AccountRecoveryScanInProgress/AccountRecoveryScanInProgress.swift
-public struct Onboarding: Sendable, FeatureReducer {
+struct Onboarding: Sendable, FeatureReducer {
 	
-	public struct View: SwiftUI.View {
-		public let store: StoreOf<Onboarding>
-		public var body: some SwiftUI.View {
+	struct View: SwiftUI.View {
+		let store: StoreOf<Onboarding>
+		var body: some SwiftUI.View {
 			WithViewStore(store, observe: { $0 }, send: { .view($0) }) { viewStore in
 				VStack {
 					Text("Onboarding")
@@ -42,68 +42,59 @@ public struct Onboarding: Sendable, FeatureReducer {
 		}
 	}
 	
-	public struct State: Sendable, Hashable {
-		public enum Status: String, Sendable, Hashable {
+	struct State: Sendable, Hashable {
+		enum Status: String, Sendable, Hashable {
 			case new
 			case derivingPublicKeys
 			case scanningNetworkForActiveAccounts
 		}
 
-		public var status: Status = .new
+		var status: Status = .new
 	
 		@PresentationState
-		public var destination: Destination.State? 
-		{
-			didSet {
-				if case .some(.derivePublicKeys) = destination {
-					self.status = .derivingPublicKeys
-				}
-			}
-		}
-
-		public init() {}
+		var destination: Destination.State? = nil
 	}
 
-	public enum ViewAction: Sendable, Equatable {
+	enum ViewAction: Sendable, Equatable {
 		case start
 		case continueTapped
 	}
 	
-	public enum InternalAction: Sendable, Equatable {
+	enum InternalAction: Sendable, Equatable {
 		case extremelyImportantInternalActionChangingState
 	}
 	
-	public enum DelegateAction: Sendable, Equatable {
+	enum DelegateAction: Sendable, Equatable {
 		case complete
 	}
 
-	public struct Destination: DestinationReducer {
-		public enum State: Sendable, Hashable {
+	struct Destination: DestinationReducer {
+		enum State: Sendable, Hashable {
 			case derivePublicKeys(DerivePublicKeys.State)
 		}
 
-		public enum Action: Sendable, Equatable {
+		enum Action: Sendable, Equatable {
 			case derivePublicKeys(DerivePublicKeys.Action)
 		}
 
-		public var body: some ReducerOf<Self> {
+		var body: some ReducerOf<Self> {
 			Scope(state: /State.derivePublicKeys, action: /Action.derivePublicKeys) {
 				DerivePublicKeys()
 			}
 		}
 	}
 
-	public init() {}
+	init() {}
 
 
-	public var body: some ReducerOf<Self> {
+	var body: some ReducerOf<Self> {
 		Reduce(core)
 			.ifLet(\.$destination, action: /Action.destination) {
 				Destination()
 			}
 	}
 
-	public func reduce(into state: inout State, internalAction: InternalAction) -> Effect<Action> {
+	func reduce(into state: inout State, internalAction: InternalAction) -> Effect<Action> {
 		switch internalAction {
 		case .extremelyImportantInternalActionChangingState:
 			return .send(.delegate(.complete))
@@ -111,9 +102,10 @@ public struct Onboarding: Sendable, FeatureReducer {
 	}
 
 
-	public func reduce(into state: inout State, viewAction: ViewAction) -> Effect<Action> {
+	func reduce(into state: inout State, viewAction: ViewAction) -> Effect<Action> {
 		switch viewAction {
 		case .start:
+			state.status = .derivingPublicKeys
 			state.destination = .derivePublicKeys(.init())
 			return .none
 
@@ -122,7 +114,7 @@ public struct Onboarding: Sendable, FeatureReducer {
 		}
 	}
 
-	public func reduce(into state: inout State, presentedAction: Destination.Action) -> Effect<Action> {
+	func reduce(into state: inout State, presentedAction: Destination.Action) -> Effect<Action> {
 		switch presentedAction {
 		case .derivePublicKeys(.delegate(.completed)):
 			return scanOnLedger(state: &state)

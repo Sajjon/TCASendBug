@@ -9,10 +9,10 @@ import Foundation
 import SwiftUI
 import ComposableArchitecture
 
-public struct Main: Sendable, FeatureReducer {
-	public struct View: SwiftUI.View {
-		public let store: StoreOf<Main>
-		public var body: some SwiftUI.View {
+struct Main: Sendable, FeatureReducer {
+	struct View: SwiftUI.View {
+		let store: StoreOf<Main>
+		var body: some SwiftUI.View {
 			VStack {
 				Text("SUCCESS!")
 					.font(.headline)
@@ -24,8 +24,6 @@ public struct Main: Sendable, FeatureReducer {
 			.background(Color.green)
 		}
 	}
-	public struct State: Sendable, Hashable {
-		public init() {}
-	}
+	struct State: Sendable, Hashable {}
 	
 }

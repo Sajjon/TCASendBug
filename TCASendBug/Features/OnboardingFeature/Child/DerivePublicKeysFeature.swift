@@ -10,37 +10,35 @@ import SwiftUI
 import ComposableArchitecture
 import CryptoKit
 
-public struct DerivePublicKeys: FeatureReducer {
+struct DerivePublicKeys: FeatureReducer {
 	@MainActor
-	public struct View: SwiftUI.View {
-		public let store: StoreOf<DerivePublicKeys>
-		public var body: some SwiftUI.View {
+	struct View: SwiftUI.View {
+		let store: StoreOf<DerivePublicKeys>
+		var body: some SwiftUI.View {
 			VStack {
 				Text("DerivePublicKeys...")
 			}
 			.task {
 				await store.send(.view(.task)).finish()
-			 }
+			}
 		}
 	}
 	
-	public struct State: Sendable, Hashable {
-		public init() {}
-	}
+	struct State: Sendable, Hashable {}
 	
-	public enum ViewAction: Sendable, Equatable {
+	enum ViewAction: Sendable, Equatable {
 		case task
 	}
 	
-	public enum InternalAction: Sendable, Equatable {
+	enum InternalAction: Sendable, Equatable {
 		case deriveKeys
 	}
 	
-	public enum DelegateAction: Sendable, Equatable {
+	enum DelegateAction: Sendable, Equatable {
 		case completed
 	}
 	private static let msgWhenDone = "Successfully DerivedKeys, delegating 'completed' now."
-	public func reduce(into state: inout State, internalAction: InternalAction) -> Effect<Action> {
+	func reduce(into state: inout State, internalAction: InternalAction) -> Effect<Action> {
 		switch internalAction {
 		case .deriveKeys:
 			print(Self.msgWhenDone)
@@ -48,7 +46,7 @@ public struct DerivePublicKeys: FeatureReducer {
 		}
 	}
 	
-	public func reduce(into state: inout State, viewAction: ViewAction) -> Effect<Action> {
+	func reduce(into state: inout State, viewAction: ViewAction) -> Effect<Action> {
 		switch viewAction {
 		case .task:
 			return .run { send in
