@@ -9,13 +9,14 @@ import Foundation
 import SwiftUI
 import ComposableArchitecture
 
-public struct AccountRecoveryScanCoordinator: Sendable, FeatureReducer {
+// `AccountRecoveryScanCoordinator`: https://github.com/radixdlt/babylon-wallet-ios/blob/ABW-2412_restore_wallet_from_mnemonic_only/RadixWallet/Features/AccountRecoveryScan/Coordinator/AccountRecoveryScanCoordinator.swift
+public struct OnboardingCoordinator: Sendable, FeatureReducer {
 	
 	@MainActor
 	public struct View: SwiftUI.View {
-		public let store: StoreOf<AccountRecoveryScanCoordinator>
+		public let store: StoreOf<OnboardingCoordinator>
 
-		public init(store: StoreOf<AccountRecoveryScanCoordinator>) {
+		public init(store: StoreOf<OnboardingCoordinator>) {
 			self.store = store
 		}
 
@@ -46,17 +47,12 @@ public struct AccountRecoveryScanCoordinator: Sendable, FeatureReducer {
 
 	public struct Path: Sendable, Hashable, Reducer {
 		public enum State: Sendable, Hashable {
-//			case selectInactiveAccountsToAdd(SelectInactiveAccountsToAdd.State)
 		}
 
 		public enum Action: Sendable, Equatable {
-//			case selectInactiveAccountsToAdd(SelectInactiveAccountsToAdd.Action)
 		}
 
 		public var body: some ReducerOf<Self> {
-//			Scope(state: /State.selectInactiveAccountsToAdd, action: /Action.selectInactiveAccountsToAdd) {
-//				SelectInactiveAccountsToAdd()
-//			}
 			EmptyReducer()
 		}
 	}
@@ -73,7 +69,7 @@ public struct AccountRecoveryScanCoordinator: Sendable, FeatureReducer {
 	
 
 	public enum DelegateAction: Sendable, Equatable {
-		case profileCreatedFromImportedBDFS
+		case successfullyCompletedOnboarding
 	}
 
 	public init() {}
@@ -93,7 +89,7 @@ public struct AccountRecoveryScanCoordinator: Sendable, FeatureReducer {
 	public func reduce(into state: inout State, childAction: ChildAction) -> Effect<Action> {
 		switch childAction {
 		case .root(.delegate(.complete)):
-			return .send(.delegate(.profileCreatedFromImportedBDFS))
+			return .send(.delegate(.successfullyCompletedOnboarding))
 
 		default: return .none
 		}

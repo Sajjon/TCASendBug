@@ -20,10 +20,9 @@ public struct AccountRecoveryScanInProgress: Sendable, FeatureReducer {
 				VStack {
 					Text("AccountRecoveryScanInProgress")
 					switch viewStore.status {
-			
-					case .scanComplete:
-						Button("Continue") {
-							store.send(.view(.continueTapped))
+					case .new:
+						Button("Start") {
+							store.send(.view(.start))
 						}
 					case .scanningNetworkForActiveAccounts:
 						ProgressView()
@@ -31,9 +30,6 @@ public struct AccountRecoveryScanInProgress: Sendable, FeatureReducer {
 					}
 				}
 				.destinations(with: store)
-				.onAppear {
-					store.send(.view(.appear))
-				}
 			}
 		}
 	}
@@ -41,10 +37,8 @@ public struct AccountRecoveryScanInProgress: Sendable, FeatureReducer {
 	public struct State: Sendable, Hashable {
 		public enum Status: String, Sendable, Hashable {
 			case new
-			case loadingFactorSource
 			case derivingPublicKeys
 			case scanningNetworkForActiveAccounts
-			case scanComplete
 		}
 
 		public var status: Status = .new
@@ -65,7 +59,7 @@ public struct AccountRecoveryScanInProgress: Sendable, FeatureReducer {
 	}
 
 	public enum ViewAction: Sendable, Equatable {
-		case appear
+		case start
 		case continueTapped
 	}
 	
@@ -115,7 +109,7 @@ public struct AccountRecoveryScanInProgress: Sendable, FeatureReducer {
 
 	public func reduce(into state: inout State, viewAction: ViewAction) -> Effect<Action> {
 		switch viewAction {
-		case .appear:
+		case .start:
 			state.destination = .derivePublicKeys(.init())
 			return .none
 
@@ -147,15 +141,12 @@ extension AccountRecoveryScanInProgress {
 			// ‼️‼️‼️‼️‼️‼️‼️		TRIGGERS THE BUG   ‼️‼️‼️‼️‼️‼️‼️‼️‼️
 			// ‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️
 			// ‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️‼️
-			try! await Task.sleep(for: .seconds(2)) // CRASH!
+			try! await Task.sleep(for: .seconds(0.1)) // CRASH!
 			await send(.internal(.extremelyImportantInternalActionChangingState))
 		}
 	}
 
-
-
 }
-
 
 
 private extension StoreOf<AccountRecoveryScanInProgress> {
