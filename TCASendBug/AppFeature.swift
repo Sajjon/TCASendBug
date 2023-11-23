@@ -43,7 +43,7 @@ struct App {
 				return proceedToNextSlowTask(state: &state)
 			case .successfullyFinished:
 				log.notice("Successfully recevied `successfullyFinished`! No bug!")
-				state.modal = nil
+				state.modal = nil // good to nil if we commented it out inside `proceedToNextSlowTask`
 				state.status = .successfullyFinished
 				return .none
 			default: return .none
