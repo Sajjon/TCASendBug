@@ -29,11 +29,11 @@ public struct App: Sendable, FeatureReducer {
 						then: { Main.View(store: $0) }
 					)
 
-				case .onboardingCoordinator:
+				case .onboarding:
 					CaseLet(
-						/App.State.Root.onboardingCoordinator,
-						action: App.ChildAction.onboardingCoordinator,
-						then: { OnboardingCoordinator.View(store: $0) }
+						/App.State.Root.onboarding,
+						action: App.ChildAction.onboarding,
+						then: { Onboarding.View(store: $0) }
 					)
 				}
 			}
@@ -42,14 +42,14 @@ public struct App: Sendable, FeatureReducer {
 	
 	public struct State: Hashable {
 		public enum Root: Hashable {
-			case onboardingCoordinator(OnboardingCoordinator.State)
+			case onboarding(Onboarding.State)
 			case main(Main.State)
 		}
 		
 		public var root: Root
 		
 		public init(
-			root: Root = .onboardingCoordinator(.init())
+			root: Root = .onboarding(.init())
 		) {
 			self.root = root
 		}
@@ -58,7 +58,7 @@ public struct App: Sendable, FeatureReducer {
 	
 	public enum ChildAction: Sendable, Equatable {
 		case main(Main.Action)
-		case onboardingCoordinator(OnboardingCoordinator.Action)
+		case onboarding(Onboarding.Action)
 	}
 	
 	public var body: some ReducerOf<Self> {
@@ -67,8 +67,8 @@ public struct App: Sendable, FeatureReducer {
 				.ifCaseLet(/State.Root.main, action: /ChildAction.main) {
 					Main()
 				}
-				.ifCaseLet(/State.Root.onboardingCoordinator, action: /ChildAction.onboardingCoordinator) {
-					OnboardingCoordinator()
+				.ifCaseLet(/State.Root.onboarding, action: /ChildAction.onboarding) {
+					Onboarding()
 				}
 		}
 		Reduce(core)
@@ -77,31 +77,10 @@ public struct App: Sendable, FeatureReducer {
 	
 	public func reduce(into state: inout State, childAction: ChildAction) -> Effect<Action> {
 		switch childAction {
-		case .onboardingCoordinator(.delegate(.successfullyCompletedOnboarding)):
+		case .onboarding(.delegate(.complete)):
 			state.root = .main(.init())
 			return .none
 		default: return .none
 		}
 	}
-}
-
-public struct Main: Sendable, FeatureReducer {
-	public struct View: SwiftUI.View {
-		public let store: StoreOf<Main>
-		public var body: some SwiftUI.View {
-			VStack {
-				Text("SUCCESS!")
-					.font(.headline)
-				
-				Text("As in, NO bug.")
-			}
-			.foregroundStyle(Color.white)
-			.frame(maxWidth: .infinity, maxHeight: .infinity)
-			.background(Color.green)
-		}
-	}
-	public struct State: Sendable, Hashable {
-		public init() {}
-	}
-	
 }

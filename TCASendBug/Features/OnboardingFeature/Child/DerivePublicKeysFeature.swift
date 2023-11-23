@@ -8,6 +8,7 @@
 import Foundation
 import SwiftUI
 import ComposableArchitecture
+import CryptoKit
 
 public struct DerivePublicKeys: FeatureReducer {
 	@MainActor
@@ -58,39 +59,11 @@ public struct DerivePublicKeys: FeatureReducer {
 	}
 }
 
-import CryptoKit
+
 private func deriveKeys(doneMessage: String) async {
 	print("\(Date.now.ISO8601Format()) - DERIVE KEYS - START")
 	_ = (0..<50_000).map { _ in
 		Curve25519.Signing.PrivateKey().publicKey
 	}
 	print("\(Date.now.ISO8601Format()) - DERIVE KEYS - DONE: EXPECT TO SEE:\n'\(doneMessage)'\nIf you dont, we have a TCA Send bug.")
-}
-
-// MARK: - OnFirstTaskViewModifier
-struct OnFirstTaskViewModifier: ViewModifier {
-	let priority: TaskPriority
-	let action: @Sendable () async -> Void
-
-	@State private var didFire = false
-
-	func body(content: Content) -> some View {
-		content.task(priority: priority) {
-			guard !didFire else {
-				return
-			}
-			didFire = true
-			await action()
-		}
-	}
-}
-
-extension View {
-	/// Executes a given action only once, when the first `task` is fired by the system.
-	public func onFirstTask(
-		priority: TaskPriority = .userInitiated,
-		_ action: @escaping @Sendable () async -> Void
-	) -> some View {
-		modifier(OnFirstTaskViewModifier(priority: priority, action: action))
-	}
 }

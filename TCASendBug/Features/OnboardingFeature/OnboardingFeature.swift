@@ -10,15 +10,16 @@ import Foundation
 import SwiftUI
 import ComposableArchitecture
 
-// MARK: - AccountRecoveryScanInProgress
-public struct AccountRecoveryScanInProgress: Sendable, FeatureReducer {
+// `AccountRecoveryScanInProgress`
+// https://github.com/radixdlt/babylon-wallet-ios/blob/ABW-2412_restore_wallet_from_mnemonic_only/RadixWallet/Features/AccountRecoveryScan/Children/AccountRecoveryScanInProgress/AccountRecoveryScanInProgress.swift
+public struct Onboarding: Sendable, FeatureReducer {
 	
 	public struct View: SwiftUI.View {
-		public let store: StoreOf<AccountRecoveryScanInProgress>
+		public let store: StoreOf<Onboarding>
 		public var body: some SwiftUI.View {
 			WithViewStore(store, observe: { $0 }, send: { .view($0) }) { viewStore in
 				VStack {
-					Text("AccountRecoveryScanInProgress")
+					Text("Onboarding")
 					switch viewStore.status {
 					case .new:
 						Button("Start") {
@@ -125,10 +126,7 @@ public struct AccountRecoveryScanInProgress: Sendable, FeatureReducer {
 		default: return .none
 		}
 	}
-}
 
-
-extension AccountRecoveryScanInProgress {
 	private func scanOnLedger(state: inout State) -> Effect<Action> {
 		state.destination = nil
 		state.status = .scanningNetworkForActiveAccounts
@@ -149,9 +147,9 @@ extension AccountRecoveryScanInProgress {
 }
 
 
-private extension StoreOf<AccountRecoveryScanInProgress> {
-	var destination: PresentationStoreOf<AccountRecoveryScanInProgress.Destination> {
-		func scopeState(state: State) -> PresentationState<AccountRecoveryScanInProgress.Destination.State> {
+private extension StoreOf<Onboarding> {
+	var destination: PresentationStoreOf<Onboarding.Destination> {
+		func scopeState(state: State) -> PresentationState<Onboarding.Destination.State> {
 			state.$destination
 		}
 		return scope(state: scopeState, action: Action.destination)
@@ -160,16 +158,16 @@ private extension StoreOf<AccountRecoveryScanInProgress> {
 
 @MainActor
 private extension View {
-	func destinations(with store: StoreOf<AccountRecoveryScanInProgress>) -> some View {
+	func destinations(with store: StoreOf<Onboarding>) -> some View {
 		let destinationStore = store.destination
 		return derivingPublicKeys(with: destinationStore)
 	}
 
-	private func derivingPublicKeys(with destinationStore: PresentationStoreOf<AccountRecoveryScanInProgress.Destination>) -> some View {
+	private func derivingPublicKeys(with destinationStore: PresentationStoreOf<Onboarding.Destination>) -> some View {
 		sheet(
 			store: destinationStore,
-			state: /AccountRecoveryScanInProgress.Destination.State.derivePublicKeys,
-			action: AccountRecoveryScanInProgress.Destination.Action.derivePublicKeys,
+			state: /Onboarding.Destination.State.derivePublicKeys,
+			action: Onboarding.Destination.Action.derivePublicKeys,
 			content: {
 				DerivePublicKeys.View(store: $0)
 			}
