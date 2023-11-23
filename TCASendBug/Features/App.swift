@@ -10,9 +10,23 @@ import SwiftUI
 import ComposableArchitecture
 import CryptoKit
 import OSLog
+let log = Logger()
+
 
 @Reducer
 struct App {
+	
+	func proceedToNextSlowTask(state: inout State) -> Effect<Action> {
+		state.status = .requestInFlight
+		state.destination = nil // <-- COMMENTING OUT THIS (which we dont) "fixes" the bug. As in `run` below does not get cancelled
+		return .run { send in
+			await slowTask(name: "App")
+			log.notice("`await send(.successfullyFinished)` is about to get called...")
+			await send(.successfullyFinished)
+			log.notice("`await send(.successfullyFinished)` called? Ever received???")
+		}
+	}
+	
 	
 	var body: some ReducerOf<App> {
 		Reduce { state, action in
@@ -20,7 +34,9 @@ struct App {
 			case .destination(.presented(.modal(.done))):
 				return proceedToNextSlowTask(state: &state)
 			case .successfullyFinished:
-				state.successfullyFinished = true
+				log.notice("Successfully recevied `successfullyFinished`! No bug!")
+				state.destination = nil
+				state.status = .successfullyFinished
 				return .none
 			default: return .none
 			}
@@ -30,18 +46,13 @@ struct App {
 		}
 	}
 	
-	func proceedToNextSlowTask(state: inout State) -> Effect<Action> {
-		state.destination = nil
-		return .run { send in
-			try! await Task.sleep(for: .seconds(2))
-			await send(.successfullyFinished)
-		}
-	}
-	
 	struct State: Sendable, Hashable {
 		@PresentationState
 		var destination: Destination.State?
-		var successfullyFinished = false
+		enum Status: String, Sendable, Hashable {
+			case idle, requestInFlight, successfullyFinished
+		}
+		var status: Status = .idle
 		init() {
 			log.debug("App start")
 			self.destination = .modal(.init())
@@ -72,10 +83,14 @@ struct App {
 			WithViewStore(store, observe: { $0 }) { viewStore in
 				VStack {
 					Text("APP")
-					if viewStore.successfullyFinished {
+					switch viewStore.status {
+					case .idle: 
+						Text("Idle")
+					case .requestInFlight:
+						ProgressView().controlSize(.extraLarge)
+						Text("Request that might never finish due to send-bug is running...")
+					case .successfullyFinished:
 						Text("Successfully finished:")
-					} else {
-						Text("Has NOT finished yet - OR failed.")
 					}
 				}
 					.sheet(
@@ -92,12 +107,10 @@ struct App {
 	
 }
 
-let log = Logger()
-
 func slowTask(name: String) async {
 	log.info("Slow task - '\(name)' START")
 	await Task {
-		_ = (0...50000).map { _ in
+		_ = (0...10000).map { _ in
 			Curve25519.Signing.PrivateKey().publicKey
 		}
 	}.value
@@ -116,7 +129,6 @@ struct Modal {
 		var body: some SwiftUI.View {
 			Text("MODAL")
 				.task {
-					log.debug("Modal View body `task`")
 					await store.send(.onTask).finish()
 				}
 		}
@@ -125,7 +137,6 @@ struct Modal {
 		Reduce { state, action in
 			switch action {
 			case .onTask:
-				log.debug("Modal - onTask, starting slow task")
 				return .run { send in
 					await slowTask(name: "From MODAL")
 					await send(.done)
