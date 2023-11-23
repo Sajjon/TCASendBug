@@ -6,12 +6,23 @@
 //
 
 import SwiftUI
+import ComposableArchitecture
 
 @main
-struct TCASendBugApp: App {
-    var body: some Scene {
-        WindowGroup {
-            ContentView()
-        }
-    }
+struct TCASendBugApp: SwiftUI.App {
+	var body: some SwiftUI.Scene {
+		WindowGroup {
+			if !_XCTIsTesting {
+				App.View(
+					store: Store(
+						initialState: App.State()
+					) {
+						App()
+					}
+				)
+			} else {
+				Text("Running tests")
+			}
+		}
+	}
 }
