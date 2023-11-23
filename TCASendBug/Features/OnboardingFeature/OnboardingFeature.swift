@@ -18,12 +18,16 @@ struct Onboarding: Sendable, Reducer {
 		let store: StoreOf<Onboarding>
 		var body: some SwiftUI.View {
 			WithViewStore(store, observe: { $0 }, send: { .view($0) }) { viewStore in
-				VStack(spacing: 30) {
+				VStack(alignment: .center, spacing: 30) {
 					Text("Onboarding")
-						.font(.largeTitle)
+						.font(.title)
 					Spacer(minLength: 0)
 					switch viewStore.status {
 					case .new:
+						Text(LocalizedStringKey("Presents `DerivePublicKeys` inside `@PresentationState var destination` as a `sheet`. When `DerivePublicKeys` is done it will delegate to this reducer which will continue with 'Scanning' (network request, which we just mock as a `Task.sleep`).\n\n**If we set `state.destination = nil` before scanning AND duration of scan is ~ \(Onboarding.State.approxMinSleepDurationCausingBug)ms (or more) triggers bug.**\n\n🐞The bug is that the `Effect<Action>.run` gets cancelled, meaning our reducer never receives a sent action.🪲"))
+						
+						Divider()
+						
 							Toggle(
 								isOn: viewStore.binding(
 									get: \.shouldNilDestinationBeforeScanning,
@@ -33,14 +37,20 @@ struct Onboarding: Sendable, Reducer {
 									Text("when set together with a high sleep duration causes crash.")
 								}
 							
-							TextField(
-								text: viewStore.binding(
-									get: \.sleepDurationInMSString,
-									send: { .sleepDurationInMSStringChanged($0) }
+						VStack(alignment: .leading, spacing: 0) {
+							Text("Mocked duration of 'scan'")
+							HStack {
+								TextField(
+									"Mocked duration of 'scan'",
+									text: viewStore.binding(
+										get: \.sleepDurationInMSString,
+										send: { .sleepDurationInMSStringChanged($0) }
+									)
 								)
-							) {
-								Text("Sleep duration - higher than 500 ms when nilling `destination` is `true` will crash the app")
+								Text("ms")
+								Spacer(minLength: 0)
 							}
+						}
 							
 							Button("Start") {
 								store.send(.view(.start))
@@ -50,12 +60,14 @@ struct Onboarding: Sendable, Reducer {
 							.controlSize(.large)
 							.tint(.purple)
 
-						Text("Scanning (network request), this should finish after: `\(viewStore.sleepDurationInMSString) ms`.\n\nIf the task does not finish, then we have a 'TCA Send'-bug, meaning that an event sent inside `run` is never received, due to `run` task being cancelled.")
+						Text("'Scanning' (mocked network request)")
+						Text(LocalizedStringKey("**If this request does not finish after `\(viewStore.sleepDurationInMSString) ms we have triggered the bug.**"))
 						Spacer(minLength: 0)
 					default: Text("`\(viewStore.status.rawValue)`")
 					}
 					Spacer(minLength: 0)
 				}
+				.multilineTextAlignment(.leading)
 				.padding()
 				.sheet(
 					store: store.scope(state: \.$destination, action: { .destination($0) }),
@@ -77,7 +89,8 @@ struct Onboarding: Sendable, Reducer {
 		}
 
 		var shouldNilDestinationBeforeScanning: Bool = true
-		var sleepDurationInMSString = "2000"
+		static let approxMinSleepDurationCausingBug = "600"
+		var sleepDurationInMSString = Self.approxMinSleepDurationCausingBug
 		var sleepDuration: Duration? {
 			guard let ms = Int(sleepDurationInMSString) else {
 				return nil
